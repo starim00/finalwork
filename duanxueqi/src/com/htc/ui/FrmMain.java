@@ -58,5 +58,9 @@ public class FrmMain extends JFrame implements ActionListener {
 			FrmSupplierManager dlg=new FrmSupplierManager(this,"用户管理",true);
 			dlg.setVisible(true);
 		}
+		if(e.getSource()==this.menuItem_RawManager){
+			FrmRawManager dlg=new FrmRawManager(this,"原材料管理",true);
+			dlg.setVisible(true);
+		}
 	}
 }

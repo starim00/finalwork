@@ -20,9 +20,9 @@ import com.htc.control.SupplierManager;
 import com.htc.model.BeanSupplier;
 import com.htc.util.BaseException;
 
-public class FrmSupplierManager_AddSup extends JDialog implements ActionListener {
+public class FrmSupplierManager_Modify extends JDialog implements ActionListener {
 	private BeanSupplier sup = null;
-
+	private int supplierID;
 	private JPanel toolBar = new JPanel();
 	private JPanel workPane = new JPanel();
 	private Button btnOk = new Button("È·¶¨");
@@ -45,12 +45,18 @@ public class FrmSupplierManager_AddSup extends JDialog implements ActionListener
 	private JPanel TelPane = new JPanel();
 	private JPanel IntPane = new JPanel();
 	
-	public FrmSupplierManager_AddSup(JDialog f, String s, boolean b) {
+	public FrmSupplierManager_Modify(JDialog f, String s, boolean b ,BeanSupplier bs) {
 		super(f, s, b);
 		toolBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		toolBar.add(btnOk);
 		toolBar.add(btnCancel);
 		this.getContentPane().add(toolBar, BorderLayout.SOUTH);
+		edtName.setText(bs.getSupplierName());
+		edtAddress.setText(bs.getSupplierAddress());
+		edtContact.setText(bs.getContactPerson());
+		edtTelephone.setText(Long.toString(bs.getTelephone()));
+		edtInt.setText(bs.getIntroduction());
+		supplierID = bs.getSupplierID();
 		namePane.add(labelName);
 		namePane.add(edtName);
 		AddressPane.add(labelAddress);
@@ -97,8 +103,8 @@ public class FrmSupplierManager_AddSup extends JDialog implements ActionListener
 			return;
 		}
 		else if(e.getSource()==this.btnOk){
-			
 			sup=new BeanSupplier();
+			sup.setSupplierID(supplierID);
 			sup.setSupplierName(edtName.getText());
 			sup.setSupplierAddress(edtAddress.getText());
 			sup.setContactPerson(edtContact.getText());
@@ -106,7 +112,7 @@ public class FrmSupplierManager_AddSup extends JDialog implements ActionListener
 			sup.setIntroduction(edtInt.getText());
 			try {
 				SupplierManager sm = new SupplierManager();
-				sm.createSupplier(sup);
+				sm.modifySupplier(sup);
 				this.setVisible(false);
 			} catch (BaseException e1) {
 				this.sup=null;

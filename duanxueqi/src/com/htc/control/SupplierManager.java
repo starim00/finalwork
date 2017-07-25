@@ -16,7 +16,7 @@ public class SupplierManager {
 		if (new SupplierDAO().getSupplier(s.getSupplierID()) == null) {
 			throw new BaseException("供货商不存在");
 		}
-		if (new RawDAO().supplierRaw(s.getSupplierID()).isEmpty()) {
+		if (!(new RawDAO().supplierRaw(s.getSupplierID()).isEmpty())) {
 			throw new BaseException("供货商有原材料未删除");
 		}
 		new SupplierDAO().deleteSupplier(s.getSupplierID());

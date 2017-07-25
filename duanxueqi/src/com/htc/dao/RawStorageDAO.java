@@ -80,7 +80,7 @@ public class RawStorageDAO implements IRawStorageDAO {
 		ArrayList<BeanRawStorage> raw = new ArrayList<BeanRawStorage>();
 		try {
 			Connection conn = DBUtil.getConnection();
-			String sql = "SELECT * FROM rawstorage WHERE productID = ?";
+			String sql = "SELECT * FROM rawstorage WHERE rawID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, rawID);
 			ResultSet rs = pst.executeQuery();

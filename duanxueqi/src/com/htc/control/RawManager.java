@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.htc.dao.RawDAO;
 import com.htc.dao.RawOrderDAO;
+import com.htc.dao.RawStockDAO;
 import com.htc.dao.RawStorageDAO;
 import com.htc.model.BeanRaw;
 import com.htc.model.BeanRawOrder;
@@ -17,10 +18,13 @@ public class RawManager {
 
 	public void deleteRaw(BeanRaw r, boolean d) throws BaseException {
 		int flag1 = 0, flag2 = 0;
-		if (new RawOrderDAO().qryRawOrder(r.getRawID()).isEmpty()) {
+		if(new RawStockDAO().qryRawStock(r.getRawID())!=null){
+			throw new BaseException("该原料还有库存");
+		}
+		if (!new RawOrderDAO().qryRawOrder(r.getRawID()).isEmpty()) {
 			flag1 = 1;
 		}
-		if (new RawStorageDAO().qryRawStorage(r.getRawID()).isEmpty()) {
+		if (!new RawStorageDAO().qryRawStorage(r.getRawID()).isEmpty()) {
 			flag2 = 1;
 		}
 		if ((flag1 == 1 || flag2 == 1) && d) {
@@ -42,7 +46,7 @@ public class RawManager {
 			new RawDAO().deleteRaw(r.getRawID());
 		}
 		else{
-			throw new BaseException("该原材料还有库存或出入库记录");
+			throw new BaseException("该原材料还有订单或出入库记录");
 		}
 	}
 	public void modifyRaw(BeanRaw r) throws BaseException{

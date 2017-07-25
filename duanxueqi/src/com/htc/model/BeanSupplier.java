@@ -5,7 +5,7 @@ public class BeanSupplier {
 	private String supplierName;
 	private String supplierAddress;
 	private String contactPerson;
-	private int telephone;
+	private long telephone;
 	private String introduction;
 	public int getSupplierID() {
 		return supplierID;
@@ -31,10 +31,10 @@ public class BeanSupplier {
 	public void setContactPerson(String contactPerson) {
 		this.contactPerson = contactPerson;
 	}
-	public int getTelephone() {
+	public long getTelephone() {
 		return telephone;
 	}
-	public void setTelephone(int telephone) {
+	public void setTelephone(long telephone) {
 		this.telephone = telephone;
 	}
 	public String getIntroduction() {

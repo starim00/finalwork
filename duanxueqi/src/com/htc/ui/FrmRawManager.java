@@ -18,30 +18,29 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import com.htc.control.SupplierManager;
-import com.htc.model.BeanSupplier;
+import com.htc.control.RawManager;
+import com.htc.model.BeanRaw;
 import com.htc.util.BaseException;
 
-public class FrmSupplierManager extends JDialog implements ActionListener {
+public class FrmRawManager extends JDialog implements ActionListener {
 	private JPanel toolBar = new JPanel();
-	private Button btnAdd = new Button("添加供货商");
-	private Button btnModify = new Button("修改供货商");
-	private Button btnDelete = new Button("删除供货商");
-	private Object tblTitle[]={"供货商ID","供货商名称","供货商","联系人","电话"};
+	private Button btnAdd = new Button("添加产品");
+	private Button btnModify = new Button("修改产品");
+	private Button btnDelete = new Button("删除产品");
+	private Object tblTitle[]={"产品ID","产品名称","价格","供货商ID"};
 	private Object tblData[][];
-	List<BeanSupplier> sups;
+	List<BeanRaw> br;
 	DefaultTableModel tablmod=new DefaultTableModel();
 	private JTable dataTable=new JTable(tablmod);
 	private void reloadTable(){
 		try {
-			sups=(new SupplierManager()).loadAllSupplier();
-			tblData =new Object[sups.size()][5];
-			for(int i=0;i<sups.size();i++){
-				tblData[i][0]=sups.get(i).getSupplierID()+"";
-				tblData[i][1]=sups.get(i).getSupplierName();
-				tblData[i][2]=sups.get(i).getSupplierAddress();
-				tblData[i][3]=sups.get(i).getContactPerson();
-				tblData[i][4]=sups.get(i).getTelephone()+"";
+			br=(new RawManager()).loadAllRaw();
+			tblData =new Object[br.size()][4];
+			for(int i=0;i<br.size();i++){
+				tblData[i][0]=br.get(i).getRawID();
+				tblData[i][1]=br.get(i).getRawName();
+				tblData[i][2]=br.get(i).getPrice();
+				tblData[i][3]=br.get(i).getSupplier();
 			}
 			tablmod.setDataVector(tblData,tblTitle);
 			this.dataTable.validate();
@@ -52,7 +51,7 @@ public class FrmSupplierManager extends JDialog implements ActionListener {
 		}
 	}
 	
-	public FrmSupplierManager(Frame f, String s, boolean b) {
+	public FrmRawManager(Frame f, String s, boolean b) {
 		super(f, s, b);
 		toolBar.setLayout(new FlowLayout(FlowLayout.LEFT));
 		toolBar.add(btnAdd);
@@ -86,9 +85,9 @@ public class FrmSupplierManager extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if(e.getSource()==this.btnAdd){
-			FrmSupplierManager_AddSup dlg=new FrmSupplierManager_AddSup(this,"添加供货商",true);
+			FrmRawManager_AddRaw dlg=new FrmRawManager_AddRaw(this,"添加供货商",true);
 			dlg.setVisible(true);
-			if(dlg.getSup()!=null){//刷新表格
+			if(dlg.getRaw()!=null){//刷新表格
 				this.reloadTable();
 			}
 		}
@@ -98,10 +97,10 @@ public class FrmSupplierManager extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(null,  "请选择供货商","提示",JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			BeanSupplier p=this.sups.get(i);
-			FrmSupplierManager_Modify dlg=new FrmSupplierManager_Modify(this,"修改供货商",true,p);
+			BeanRaw b=this.br.get(i);
+			FrmRawManager_Modify dlg=new FrmRawManager_Modify(this,"修改供货商",true,b);
 			dlg.setVisible(true);
-			if(dlg.getSup()!=null){//刷新表格
+			if(dlg.getRaw()!=null){//刷新表格
 				this.reloadTable();
 			}
 		}
@@ -111,15 +110,11 @@ public class FrmSupplierManager extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(null,  "请选择供货商","提示",JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			BeanSupplier bs=this.sups.get(i);
-			if(JOptionPane.showConfirmDialog(this,"确定删除"+bs.getSupplierName()+"吗？","确认",JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION){
-				try {
-					(new SupplierManager()).deleteSupplier(bs);
-					this.reloadTable();
-				} catch (BaseException e1) {
-					JOptionPane.showMessageDialog(null, e1.getMessage(),"错误",JOptionPane.ERROR_MESSAGE);
-				}
-				
+			BeanRaw b=this.br.get(i);
+			FrmRawManager_Del dlg=new FrmRawManager_Del(this,"修改供货商",true,b);
+			dlg.setVisible(true);
+			if(dlg.getRaw()!=null){//刷新表格
+				this.reloadTable();
 			}
 		}
 	}

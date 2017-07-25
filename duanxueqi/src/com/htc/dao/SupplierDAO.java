@@ -24,7 +24,7 @@ public class SupplierDAO implements ISupplierDAO {
 			pst.setString(1, s.getSupplierName());
 			pst.setString(2, s.getSupplierAddress());
 			pst.setString(3, s.getContactPerson());
-			pst.setInt(4, s.getTelephone());
+			pst.setLong(4, s.getTelephone());
 			pst.setString(5, s.getIntroduction());
 			pst.execute();
 			pst.close();
@@ -59,12 +59,12 @@ public class SupplierDAO implements ISupplierDAO {
 		// TODO Auto-generated method stub
 		try {
 			Connection conn = DBUtil.getConnection();
-			String sql = "UPDATE supplier SET supplierName = ?,supplierAddress = ?,contactPerson = ?,telephone = ?,introduction = ? WHERE customerID = ?";
+			String sql = "UPDATE supplier SET supplierName = ?,supplierAddress = ?,contactPerson = ?,telephone = ?,introduction = ? WHERE supplierID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setString(1, s.getSupplierName());
 			pst.setString(2, s.getSupplierAddress());
 			pst.setString(3, s.getContactPerson());
-			pst.setInt(4, s.getTelephone());
+			pst.setLong(4, s.getTelephone());
 			pst.setString(5, s.getIntroduction());
 			pst.setInt(6, s.getSupplierID());
 			pst.execute();
@@ -93,7 +93,7 @@ public class SupplierDAO implements ISupplierDAO {
 				c.setSupplierName(rs.getString(2));
 				c.setSupplierAddress(rs.getString(3));
 				c.setContactPerson(rs.getString(4));
-				c.setTelephone(rs.getInt(5));
+				c.setTelephone(rs.getLong(5));
 				c.setIntroduction(rs.getString(6));
 				customers.add(c);
 			}
@@ -123,7 +123,7 @@ public class SupplierDAO implements ISupplierDAO {
 				c.setSupplierName(rs.getString(2));
 				c.setSupplierAddress(rs.getString(3));
 				c.setContactPerson(rs.getString(4));
-				c.setTelephone(rs.getInt(5));
+				c.setTelephone(rs.getLong(5));
 				c.setIntroduction(rs.getString(6));
 				rs.close();
 				pst.close();
