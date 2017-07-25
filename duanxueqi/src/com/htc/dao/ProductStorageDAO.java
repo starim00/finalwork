@@ -20,11 +20,12 @@ public class ProductStorageDAO implements IProductStorageDAO {
 		// TODO Auto-generated method stub
 		try {
 			Connection conn = DBUtil.getConnection();
-			String sql = "INSERT INTO productstorage(productID,date,storageQuantity) values (?,?,?)";
+			String sql = "INSERT INTO productstorage(productID,productOrderID,date,storageQuantity) values (?,?,?,?)";
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, d.getProductID());
-			pst.setLong(2, d.getDate().getTime());
-			pst.setInt(3, d.getStorageQuantity());
+			pst.setInt(2,d.getProductOrderID());
+			pst.setLong(3, d.getDate().getTime());
+			pst.setInt(4, d.getStorageQuantity());
 			pst.execute();
 			pst.close();
 			conn.close();
@@ -58,12 +59,13 @@ public class ProductStorageDAO implements IProductStorageDAO {
 		// TODO Auto-generated method stub
 		try {
 			Connection conn = DBUtil.getConnection();
-			String sql = "UPDATE productstorage SET productID = ?, date = ?, storageQuantity = ? WHERE productStorageID = ?";
+			String sql = "UPDATE productstorage SET productID = ?, productOrderID, date = ?, storageQuantity = ? WHERE productStorageID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, d.getProductID());
-			pst.setLong(2, d.getDate().getTime());
-			pst.setInt(3, d.getStorageQuantity());
-			pst.setInt(4, d.getProductStorageID());
+			pst.setInt(2, d.getProductOrderID());
+			pst.setLong(3, d.getDate().getTime());
+			pst.setInt(4, d.getStorageQuantity());
+			pst.setInt(5, d.getProductStorageID());
 			pst.execute();
 			pst.close();
 			conn.close();
@@ -88,8 +90,9 @@ public class ProductStorageDAO implements IProductStorageDAO {
 				BeanProductStorage p = new BeanProductStorage();
 				p.setProductStorageID(rs.getInt(1));
 				p.setProductID(rs.getInt(2));
-				p.setDate(new Date(rs.getLong(3)));
-				p.setStorageQuantity(rs.getInt(4));
+				p.setProductOrderID(rs.getInt(3));
+				p.setDate(new Date(rs.getLong(4)));
+				p.setStorageQuantity(rs.getInt(5));
 				product.add(p);
 			}
 			rs.close();
@@ -116,8 +119,43 @@ public class ProductStorageDAO implements IProductStorageDAO {
 			if(rs.next()){
 				p.setProductStorageID(rs.getInt(1));
 				p.setProductID(rs.getInt(2));
-				p.setDate(new Date(rs.getLong(3)));
-				p.setStorageQuantity(rs.getInt(4));
+				p.setProductOrderID(rs.getInt(3));
+				p.setDate(new Date(rs.getLong(4)));
+				p.setStorageQuantity(rs.getInt(5));
+				rs.close();
+				pst.close();
+				conn.close();
+				return p;
+			}
+			else{
+				rs.close();
+				pst.close();
+				conn.close();
+				return null;
+			}
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+	}
+
+	@Override
+	public BeanProductStorage searchByOrderID(int productOrderID) throws BaseException {
+		// TODO Auto-generated method stub
+		BeanProductStorage p = new BeanProductStorage();
+		try {
+			Connection conn = DBUtil.getConnection();
+			String sql = "SELECT * FROM orderstorage WHERE productOrderID = ?";
+			PreparedStatement pst = conn.prepareStatement(sql);
+			pst.setInt(1, productOrderID);
+			ResultSet rs = pst.executeQuery();
+			if(rs.next()){
+				p.setProductStorageID(rs.getInt(1));
+				p.setProductID(rs.getInt(2));
+				p.setProductOrderID(rs.getInt(3));
+				p.setDate(new Date(rs.getLong(4)));
+				p.setStorageQuantity(rs.getInt(5));
 				rs.close();
 				pst.close();
 				conn.close();

@@ -3,6 +3,7 @@ package com.htc.control;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.htc.dao.ProductOrderDAO;
 import com.htc.dao.ProductStorageDAO;
 import com.htc.dao.RawDAO;
 import com.htc.dao.RawStorageDAO;
@@ -31,5 +32,12 @@ public class StorageManager {
 
 	public List<BeanProductStorage> loadAllProductStorage(int productID) throws BaseException {
 		return new ProductStorageDAO().qryProductStorage(productID);
+	}
+
+	public BeanProductStorage searchByOrder(int productOrderID) throws BaseException {
+		if (new ProductOrderDAO().getProductOrder(productOrderID) == null)
+			throw new BaseException("¶©µ¥²»´æÔÚ");
+		else
+			return new ProductStorageDAO().searchByOrderID(productOrderID);
 	}
 }

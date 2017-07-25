@@ -103,6 +103,7 @@ public class OrderManager {
 				BeanProductStorage rs = new BeanProductStorage();
 				rs.setProductID(o1.getProductID());
 				rs.setStorageQuantity(o1.getQuantity());
+				rs.setProductOrderID(o1.getProductOrderID());
 				rs.setDate(new Date(System.currentTimeMillis()));
 				new ProductStorageDAO().createProductStorage(rs);
 				sto.setStockQuantity(sto.getStockQuantity() - o1.getQuantity());
