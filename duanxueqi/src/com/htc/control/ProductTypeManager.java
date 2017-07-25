@@ -16,7 +16,7 @@ public class ProductTypeManager {
 		if (new ProductTypeDAO().getProductType(p.getProductTypeID()) == null) {
 			throw new BaseException("不存在的产品类型");
 		}
-		if (new ProductDAO().productTypeProduct(p.getProductTypeID()).isEmpty()) {
+		if (!new ProductDAO().productTypeProduct(p.getProductTypeID()).isEmpty()) {
 			throw new BaseException("还有该类型的产品存在");
 		}
 		new ProductTypeDAO().deleteProductType(p.getProductTypeID());

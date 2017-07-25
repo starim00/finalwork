@@ -70,4 +70,9 @@ public class ProductManager {
 			return new ProductDAO().getProduct(productID);
 		}
 	}
+	
+	public List<BeanProduct> searchProduct(String productName, int productTypeID) throws BaseException {
+		return new ProductDAO().searchProduct(productName, productTypeID);
+	}
+	
 }

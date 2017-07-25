@@ -8,66 +8,91 @@ import java.awt.TextArea;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Map;
 
 import javax.swing.BoxLayout;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.htc.control.RawManager;
-import com.htc.model.BeanRaw;
+import com.htc.control.ProductManager;
+import com.htc.model.BeanProduct;
+import com.htc.model.BeanProductType;
 import com.htc.util.BaseException;
 
-public class FrmRawManager_AddRaw extends JDialog implements ActionListener {
-	private BeanRaw br = null;
+public class FrmProductManager_Modify extends JDialog implements ActionListener {
+	private BeanProduct bp = null;
 
 	private JPanel toolBar = new JPanel();
 	private JPanel workPane = new JPanel();
 	private Button btnOk = new Button("确定");
 	private Button btnCancel = new Button("取消");
-	private JLabel labelName = new JLabel("原材料名称:");
-	private JLabel labelPrice = new JLabel("原材料价格:");
-	private JLabel labelSupplierID = new JLabel("供货商ID");
-	private JLabel labelInt = new JLabel("　简介:");
+	private JLabel labelName = new JLabel(" 产品名称:");
+	private JLabel labelPrice = new JLabel(" 产品价格:");
+	private JLabel labelProductTypeID = new JLabel("产品类型");
+	private JLabel labelInt = new JLabel("　 简介:");
 
 	private JTextField edtName = new JTextField(20);
 	private JTextField edtPrice = new JTextField(20);
-	private JTextField edtSupplierID = new JTextField(20);
+	private Map<String,BeanProductType> productTypeMap_name=null;
+	private JComboBox cmbProducttype=null;
 	private TextArea edtInt = new TextArea(3,35);
 
 	private JPanel namePane = new JPanel();
 	private JPanel pricePane = new JPanel();
-	private JPanel supplierPane = new JPanel();
+	private JPanel productTypePane = new JPanel();
 	private JPanel IntPane = new JPanel();
 	
-	public FrmRawManager_AddRaw(JDialog f, String s, boolean b) {
+	public FrmProductManager_Modify(JDialog f, String s, boolean b ,Map<String, BeanProductType> ptMap,BeanProduct bp) {
 		super(f, s, b);
+		this.bp=bp;
+		this.productTypeMap_name=ptMap;
 		toolBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		toolBar.add(btnOk);
 		toolBar.add(btnCancel);
 		this.getContentPane().add(toolBar, BorderLayout.SOUTH);
+		edtName.setText(bp.getProductName());
+		edtPrice.setText(Double.toString(bp.getProductPrice()));
+		edtInt.setText(bp.getIntroduction());
+		String[] strTypes=new String[this.productTypeMap_name.size()+1];
+		strTypes[0]="";
+		java.util.Iterator<BeanProductType> itRt=this.productTypeMap_name.values().iterator();
+		int i=1;
+		int oldIndex=0;
+		while(itRt.hasNext()){
+			BeanProductType pt=itRt.next();
+			strTypes[i]=pt.getProductTypeName();
+			if(this.bp.getProductTypeID()==bp.getProductTypeID()){
+				oldIndex=i;
+			}
+			i++;
+		}
+		cmbProducttype=new JComboBox(strTypes);
+		this.cmbProducttype.setSelectedIndex(oldIndex);
 		namePane.add(labelName);
 		namePane.add(edtName);
 		pricePane.add(labelPrice);
 		pricePane.add(edtPrice);
-		supplierPane.add(labelSupplierID);
-		supplierPane.add(edtSupplierID);
+		productTypePane.add(labelProductTypeID);
+		productTypePane.add(cmbProducttype);
+		
 		IntPane.add(labelInt);
 		IntPane.add(edtInt);
 		namePane.setSize(250,100);
 		pricePane.setSize(250,100);
-		supplierPane.setSize(250,100);
+		productTypePane.setSize(250,100);
 		IntPane.setSize(250,100);
 		workPane.setLayout(new BoxLayout(workPane, BoxLayout.Y_AXIS));
 		workPane.add(namePane);
 		workPane.add(pricePane);
-		workPane.add(supplierPane);
 		workPane.add(IntPane);
+		workPane.add(productTypePane);
 		namePane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		pricePane.setAlignmentX(Component.LEFT_ALIGNMENT);
-		supplierPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+		productTypePane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		IntPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.getContentPane().add(workPane, BorderLayout.CENTER);
 		this.setSize(350,250);
@@ -89,24 +114,27 @@ public class FrmRawManager_AddRaw extends JDialog implements ActionListener {
 			return;
 		}
 		else if(e.getSource()==this.btnOk){
-			
-			br=new BeanRaw();
-			br.setRawName(edtName.getText());
-			br.setPrice(Double.parseDouble(edtPrice.getText()));
-			br.setSupplier(Integer.parseInt(edtSupplierID.getText()));
-			br.setIntroduction(edtInt.getText());
+			bp.setProductName(edtName.getText());
+			bp.setProductPrice(Double.parseDouble(edtPrice.getText()));
+			String ptName=this.cmbProducttype.getSelectedItem().toString();
+			BeanProductType bpt = this.productTypeMap_name.get(ptName);
+			if(bpt==null){
+				JOptionPane.showMessageDialog(null, "请选择产品类别","错误",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			bp.setProductTypeID(bpt.getProductTypeID());;
 			try {
-				RawManager rm = new RawManager();
-				rm.createRaw(br);
+				ProductManager pm = new ProductManager();
+				pm.modifyProduct(bp);
 				this.setVisible(false);
 			} catch (BaseException e1) {
-				this.br=null;
+				this.bp=null;
 				JOptionPane.showMessageDialog(null, e1.getMessage(),"错误",JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
-	public BeanRaw getRaw() {
-		return br;
+	public BeanProduct getProduct() {
+		return bp;
 	}
 
 }

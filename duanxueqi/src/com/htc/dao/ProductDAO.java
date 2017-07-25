@@ -199,4 +199,39 @@ public class ProductDAO implements IProductDAO {
 		}
 	}
 
+	@Override
+	public List<BeanProduct> searchProduct(String productName, int productTypeID) throws BaseException {
+		// TODO Auto-generated method stub
+		ArrayList<BeanProduct> product = new ArrayList<BeanProduct>();
+		try {
+			Connection conn = DBUtil.getConnection();
+			String sql = "SELECT * FROM product WHERE productName like ?";
+			if(productTypeID>0)
+				sql+="AND productTypeID = ?";
+			PreparedStatement pst = conn.prepareStatement(sql);
+			pst.setString(1, "%"+productName+"%");
+			if(productTypeID>0)
+				pst.setInt(2, productTypeID);
+			ResultSet rs = pst.executeQuery();
+			while(rs.next()){
+				BeanProduct p = new BeanProduct();
+				p.setProductID(rs.getInt(1));
+				p.setProductName(rs.getString(2));
+				p.setProductPrice(rs.getDouble(3));
+				p.setProductTypeID(rs.getInt(4));
+				p.setIntroduction(rs.getString(5));
+				product.add(p);
+			}
+			rs.close();
+			pst.close();
+			conn.close();
+			return product;
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+	}
+	
+
 }

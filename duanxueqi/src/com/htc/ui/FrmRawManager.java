@@ -85,7 +85,7 @@ public class FrmRawManager extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if(e.getSource()==this.btnAdd){
-			FrmRawManager_AddRaw dlg=new FrmRawManager_AddRaw(this,"添加供货商",true);
+			FrmRawManager_Add dlg=new FrmRawManager_Add(this,"添加供货商",true);
 			dlg.setVisible(true);
 			if(dlg.getRaw()!=null){//刷新表格
 				this.reloadTable();

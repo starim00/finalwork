@@ -13,4 +13,5 @@ public interface IProductDAO {
 	public BeanProduct getProduct(int productID) throws BaseException;
 	public List<BeanProduct> productTypeProduct(int productTypeID) throws BaseException;
 	public List<BeanProduct> searchByPrice(double up,double down) throws BaseException;
+	public List<BeanProduct> searchProduct(String productName,int productTypeID) throws BaseException;
 }
