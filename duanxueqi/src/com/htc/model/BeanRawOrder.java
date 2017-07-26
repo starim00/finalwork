@@ -4,7 +4,6 @@ public class BeanRawOrder {
 	private int rawOrderID;
 	private int rawID;
 	private int quantity;
-	private double price;
 	private boolean isDone;
 	public int getRawOrderID() {
 		return rawOrderID;
@@ -23,12 +22,6 @@ public class BeanRawOrder {
 	}
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
-	}
-	public double getPrice() {
-		return price;
-	}
-	public void setPrice(double price) {
-		this.price = price;
 	}
 	public boolean isDone() {
 		return isDone;

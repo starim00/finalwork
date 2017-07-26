@@ -19,11 +19,10 @@ public class RawOrderDAO implements IRawOrderDAO {
 		// TODO Auto-generated method stub
 		try {
 			Connection conn = DBUtil.getConnection();
-			String sql = "INSERT INTO raworder(rawID,quantity,price) values (?,?,?)";
+			String sql = "INSERT INTO raworder(rawID,quantity) values (?,?)";
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, r.getRawID());
 			pst.setInt(2, r.getQuantity());
-			pst.setDouble(3, r.getPrice());
 			pst.execute();
 			pst.close();
 			conn.close();
@@ -57,13 +56,12 @@ public class RawOrderDAO implements IRawOrderDAO {
 		// TODO Auto-generated method stub
 		try {
 			Connection conn = DBUtil.getConnection();
-			String sql = "UPDATE raworder SET rawID = ?,quantity = ?,price = ?,isDone = ? WHERE rawOrderID = ?";
+			String sql = "UPDATE raworder SET rawID = ?,quantity = ?,isDone = ? WHERE rawOrderID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, r.getRawID());
 			pst.setInt(2, r.getQuantity());
-			pst.setDouble(3, r.getPrice());
-			pst.setBoolean(4, r.isDone());
-			pst.setInt(5, r.getRawOrderID());
+			pst.setBoolean(3, r.isDone());
+			pst.setInt(4, r.getRawOrderID());
 			pst.execute();
 			pst.close();
 			conn.close();
@@ -80,17 +78,19 @@ public class RawOrderDAO implements IRawOrderDAO {
 		ArrayList<BeanRawOrder> raw = new ArrayList<BeanRawOrder>();
 		try {
 			Connection conn = DBUtil.getConnection();
-			String sql = "SELECT * FROM raworder WHERE rawID = ?";
+			String sql = "SELECT * FROM raworder";
+			if(rawID!=0)
+				sql+=" WHERE rawID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setInt(1, rawID);
+			if(rawID!=0)
+				pst.setInt(1, rawID);
 			ResultSet rs = pst.executeQuery();
 			while(rs.next()){
 				BeanRawOrder p = new BeanRawOrder();
 				p.setRawOrderID(rs.getInt(1));
 				p.setRawID(rs.getInt(2));
 				p.setQuantity(rs.getInt(3));
-				p.setPrice(rs.getDouble(4));
-				p.setDone(rs.getBoolean(5));
+				p.setDone(rs.getBoolean(4));
 				raw.add(p);
 			}
 			rs.close();
@@ -118,8 +118,7 @@ public class RawOrderDAO implements IRawOrderDAO {
 				p.setRawOrderID(rs.getInt(1));
 				p.setRawID(rs.getInt(2));
 				p.setQuantity(rs.getInt(3));
-				p.setPrice(rs.getDouble(4));
-				p.setDone(rs.getBoolean(5));
+				p.setDone(rs.getBoolean(4));
 				rs.close();
 				pst.close();
 				conn.close();

@@ -84,10 +84,9 @@ public class FrmProductDetailManager_Modify extends JDialog implements ActionLis
 		}
 		else if(e.getSource()==this.btnOk){
 			bpd.setQuantity(Integer.parseInt(edtInt.getText()));
-			
 			try {
 				ProductDetailManager pdm = new ProductDetailManager();
-				pdm.createProductDetail(bpd);
+				pdm.modifyProductDetail(bpd);
 				this.setVisible(false);
 			} catch (BaseException e1) {
 				this.bpd=null;

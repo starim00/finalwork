@@ -113,6 +113,7 @@ public class ProductDetailDAO implements IProductDetailDAO {
 			String sql = "SELECT * FROM productdetail WHERE productID = ? AND rawID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, productID);
+			pst.setInt(2, rawID);
 			ResultSet rs = pst.executeQuery();
 			if(rs.next()){
 				p.setProductID(rs.getInt(1));

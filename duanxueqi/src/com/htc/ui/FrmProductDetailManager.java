@@ -19,7 +19,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import com.htc.control.ProductDetailManager;
@@ -40,7 +39,7 @@ public class FrmProductDetailManager extends JDialog implements ActionListener {
 	private Map<Integer, BeanRaw> rawMap_name = new HashMap<Integer, BeanRaw>();
 	private JComboBox cmbProduct = null;
 	private Button btnSearch = new Button("查询");
-	private Object tblTitle[] = { "产品ID", "原材料ID", "数量",};
+	private Object tblTitle[] = { "产品ID", "原材料ID", "数量", };
 	private Object tblData[][];
 	List<BeanProductDetail> bp;
 	DefaultTableModel tablmod = new DefaultTableModel();
@@ -98,6 +97,7 @@ public class FrmProductDetailManager extends JDialog implements ActionListener {
 		toolBar.add(btnModify);
 		toolBar.add(this.btnDelete);
 		toolBar.add(cmbProduct);
+		toolBar.add(btnSearch);
 		this.getContentPane().add(toolBar, BorderLayout.NORTH);
 		// 提取现有数据
 		this.reloadTable();
@@ -126,13 +126,13 @@ public class FrmProductDetailManager extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == this.btnAdd) {
-			FrmProductDetailManager_Add dlg = new FrmProductDetailManager_Add(this, "添加生产细节", true, this.productMap_id, this.rawMap_name);
+			FrmProductDetailManager_Add dlg = new FrmProductDetailManager_Add(this, "添加生产细节", true, this.productMap_id,
+					this.rawMap_name);
 			dlg.setVisible(true);
 			if (dlg.getProductDetail() != null) {// 刷新表格
 				this.reloadTable();
 			}
-		} 
-		else if (e.getSource() == this.btnModify) {
+		} else if (e.getSource() == this.btnModify) {
 			int i = this.dataTable.getSelectedRow();
 			if (i < 0) {
 				JOptionPane.showMessageDialog(null, "请选择产品类别", "提示", JOptionPane.ERROR_MESSAGE);
@@ -144,22 +144,25 @@ public class FrmProductDetailManager extends JDialog implements ActionListener {
 			if (dlg.getProductDetail() != null) {// 刷新表格
 				this.reloadTable();
 			}
+		} else if (e.getSource() == this.btnDelete) {
+			int i = this.dataTable.getSelectedRow();
+			if (i < 0) {
+				JOptionPane.showMessageDialog(null, "请选择产品类别", "提示", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			BeanProductDetail bpt = this.bp.get(i);
+			if (JOptionPane.showConfirmDialog(this, "确定删除吗？", "确认",
+					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				try {
+					new ProductDetailManager().deleteProductDetail(bpt);
+					this.reloadTable();
+				} catch (BaseException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+				}
+
+			}
+		} else if (e.getSource() == this.btnSearch) {
+			this.reloadTable();
 		}
-//		else if (e.getSource() == this.btnDelete) {
-//			int i = this.dataTable.getSelectedRow();
-//			if (i < 0) {
-//				JOptionPane.showMessageDialog(null, "请选择产品类别", "提示", JOptionPane.ERROR_MESSAGE);
-//				return;
-//			}
-//			BeanProduct bpt = this.bp.get(i);
-//			FrmProductManager_Del dlg = new FrmProductManager_Del(this, "修改产品", true,bpt);
-//			dlg.setVisible(true);
-//			if (dlg.getProduct() != null) {// 刷新表格
-//				this.reloadTable();
-//			}
-//		}
-//		else if (e.getSource() == this.btnSearch) {
-//			this.reloadTable();
-//		}
 	}
 }
