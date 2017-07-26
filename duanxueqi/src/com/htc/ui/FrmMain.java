@@ -18,6 +18,7 @@ public class FrmMain extends JFrame implements ActionListener {
 	private JMenuItem menuItem_ProductTypeManager = new JMenuItem("产品类别管理");
 	private JMenuItem menuItem_ProductManager = new JMenuItem("产品管理");
 	private JMenuItem menuItem_CustomerManager = new JMenuItem("客户管理");
+	private JMenuItem menuItem_ProductDetail = new JMenuItem("产品生产细节管理");
 
 	private JMenuItem menuItem_RawOrder = new JMenuItem("原材料订单");
 	private JMenuItem menuItem_ProductOrder = new JMenuItem("产品订单");
@@ -37,6 +38,8 @@ public class FrmMain extends JFrame implements ActionListener {
 		menuItem_ProductManager.addActionListener(this);
 		menu_Produce.add(menuItem_CustomerManager);
 		menuItem_CustomerManager.addActionListener(this);
+		menu_Produce.add(menuItem_ProductDetail);
+		menuItem_ProductDetail.addActionListener(this);
 		menubar.add(menu_Produce);
 		menu_Stock.add(menuItem_RawOrder);
 		menuItem_RawOrder.addActionListener(this);
@@ -68,6 +71,14 @@ public class FrmMain extends JFrame implements ActionListener {
 		}
 		else if(e.getSource()==this.menuItem_ProductManager){
 			FrmProductManager dlg = new FrmProductManager(this, "产品管理", true);
+			dlg.setVisible(true);
+		}
+		else if(e.getSource()==this.menuItem_CustomerManager){
+			FrmCustomerManager dlg = new FrmCustomerManager(this, "产品管理", true);
+			dlg.setVisible(true);
+		}
+		else if(e.getSource()==this.menuItem_ProductDetail){
+			FrmProductDetailManager dlg = new FrmProductDetailManager(this, "产品管理", true);
 			dlg.setVisible(true);
 		}
 	}

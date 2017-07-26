@@ -8,8 +8,10 @@ import java.awt.TextArea;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Map;
 
 import javax.swing.BoxLayout;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -17,7 +19,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.htc.control.RawManager;
+import com.htc.model.BeanProductType;
 import com.htc.model.BeanRaw;
+import com.htc.model.BeanSupplier;
 import com.htc.util.BaseException;
 
 public class FrmRawManager_Add extends JDialog implements ActionListener {
@@ -34,7 +38,8 @@ public class FrmRawManager_Add extends JDialog implements ActionListener {
 
 	private JTextField edtName = new JTextField(20);
 	private JTextField edtPrice = new JTextField(20);
-	private JTextField edtSupplierID = new JTextField(20);
+	private Map<String,BeanSupplier> supMap_name=null;
+	private JComboBox cmbSupplier=null;
 	private TextArea edtInt = new TextArea(3,35);
 
 	private JPanel namePane = new JPanel();
@@ -42,8 +47,9 @@ public class FrmRawManager_Add extends JDialog implements ActionListener {
 	private JPanel supplierPane = new JPanel();
 	private JPanel IntPane = new JPanel();
 	
-	public FrmRawManager_Add(JDialog f, String s, boolean b) {
+	public FrmRawManager_Add(JDialog f, String s, boolean b ,Map<String, BeanSupplier> bsMap) {
 		super(f, s, b);
+		this.supMap_name=bsMap;
 		toolBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		toolBar.add(btnOk);
 		toolBar.add(btnCancel);
@@ -53,7 +59,16 @@ public class FrmRawManager_Add extends JDialog implements ActionListener {
 		pricePane.add(labelPrice);
 		pricePane.add(edtPrice);
 		supplierPane.add(labelSupplierID);
-		supplierPane.add(edtSupplierID);
+		String[] strTypes=new String[this.supMap_name.size()+1];
+		strTypes[0]="";
+		java.util.Iterator<BeanSupplier> itRt=this.supMap_name.values().iterator();
+		int i=1;
+		while(itRt.hasNext()){
+			strTypes[i]=itRt.next().getSupplierName();
+			i++;
+		}
+		cmbSupplier=new JComboBox(strTypes);
+		supplierPane.add(cmbSupplier);
 		IntPane.add(labelInt);
 		IntPane.add(edtInt);
 		namePane.setSize(250,100);
@@ -93,7 +108,13 @@ public class FrmRawManager_Add extends JDialog implements ActionListener {
 			br=new BeanRaw();
 			br.setRawName(edtName.getText());
 			br.setPrice(Double.parseDouble(edtPrice.getText()));
-			br.setSupplier(Integer.parseInt(edtSupplierID.getText()));
+			String ptName=this.cmbSupplier.getSelectedItem().toString();
+			BeanSupplier bpt = this.supMap_name.get(ptName);
+			if(bpt==null){
+				JOptionPane.showMessageDialog(null, "请选择供应商","错误",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			br.setSupplier(bpt.getSupplierID());;
 			br.setIntroduction(edtInt.getText());
 			try {
 				RawManager rm = new RawManager();

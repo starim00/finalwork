@@ -72,4 +72,7 @@ public class RawManager {
 			return new RawDAO().getRaw(rawID);
 		}
 	}
+	public List<BeanRaw> serchBySupplier(int supplierID) throws BaseException{
+		return new RawDAO().supplierRaw(supplierID);
+	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.htc.dao.ProductDAO;
 import com.htc.dao.ProductOrderDAO;
+import com.htc.dao.ProductStockDAO;
 import com.htc.dao.ProductStorageDAO;
 import com.htc.model.BeanProduct;
 import com.htc.model.BeanProductOrder;
@@ -17,10 +18,12 @@ public class ProductManager {
 
 	public void deleteProduct(BeanProduct p, boolean d) throws BaseException {
 		int flag1 = 0, flag2 = 0;
-		if (new ProductOrderDAO().qryProductOrder(p.getProductID()).isEmpty()) {
+		if(new ProductStockDAO().qryProductStock(p.getProductID())!=null)
+			throw new BaseException("该产品还有库存");
+		if (!new ProductOrderDAO().qryProductOrder(p.getProductID()).isEmpty()) {
 			flag1 = 1;
 		}
-		if (new ProductStorageDAO().qryProductStorage(p.getProductID()).isEmpty()) {
+		if (!new ProductStorageDAO().qryProductStorage(p.getProductID()).isEmpty()) {
 			flag2 = 1;
 		}
 		if ((flag1 == 1 || flag2 == 1) && d) {
@@ -40,7 +43,7 @@ public class ProductManager {
 		} else if (flag1 == 0 && flag2 == 0) {
 			new ProductDAO().deleteProduct(p.getProductID());
 		} else {
-			throw new BaseException("该原材料还有库存或出入库记录");
+			throw new BaseException("该产品还有订单和出入库记录");
 		}
 	}
 

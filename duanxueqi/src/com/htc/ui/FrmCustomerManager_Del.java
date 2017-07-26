@@ -3,6 +3,7 @@ package com.htc.ui;
 import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Checkbox;
+import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,27 +12,29 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.htc.control.ProductManager;
-import com.htc.model.BeanProduct;
+import com.htc.control.CustomerManager;
+import com.htc.control.RawManager;
+import com.htc.model.BeanCustomer;
+import com.htc.model.BeanRaw;
 import com.htc.util.BaseException;
 
-public class FrmProductManager_Del extends JDialog implements ActionListener {
-	BeanProduct bp = null;
+public class FrmCustomerManager_Del extends JDialog implements ActionListener {
+	BeanCustomer bc = null;
 	private JPanel toolBar = new JPanel();
 	private JPanel workPane = new JPanel();
 	private Button btnOk = new Button("确定");
 	private Button btnCancel = new Button("取消");
 	private Checkbox isDel = new Checkbox();
-	public FrmProductManager_Del(JDialog f, String s, boolean b,BeanProduct p) {
+	public FrmCustomerManager_Del(JDialog f, String s, boolean b,BeanCustomer c) {
 		// TODO Auto-generated constructor stub
 		super(f, s, b);
 		toolBar.add(btnOk);
 		toolBar.add(btnCancel);
 		this.getContentPane().add(toolBar, BorderLayout.SOUTH);
-		isDel.setLabel("同时删除订单和出入库记录");
+		isDel.setLabel("同时删除订单");
 		workPane.add(isDel);
 		this.getContentPane().add(workPane, BorderLayout.CENTER);
-		bp=p;
+		bc=c;
 		this.setSize(350,150);
 		// 屏幕居中显示
 		double width = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
@@ -51,17 +54,17 @@ public class FrmProductManager_Del extends JDialog implements ActionListener {
 		}
 		else if(e.getSource()==this.btnOk){
 			try {
-				ProductManager pm = new ProductManager();
-				pm.deleteProduct(bp, isDel.getState());
+				CustomerManager rm = new CustomerManager();
+				rm.deleteCustomer(bc, isDel.getState());
 				this.setVisible(false);
 			} catch (BaseException e1) {
 				// TODO Auto-generated catch block
-				this.bp=null;
+				this.bc=null;
 				JOptionPane.showMessageDialog(null, e1.getMessage(),"错误",JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
-	public BeanProduct getProduct() {
-		return bp;
+	public BeanCustomer getCustomer() {
+		return bc;
 	}
 }

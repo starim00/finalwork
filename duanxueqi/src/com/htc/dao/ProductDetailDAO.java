@@ -78,9 +78,13 @@ public class ProductDetailDAO implements IProductDetailDAO {
 		ArrayList<BeanProductDetail> product = new ArrayList<BeanProductDetail>();
 		try {
 			Connection conn = DBUtil.getConnection();
-			String sql = "SELECT * FROM productdetail WHERE¡¡productID = ?";
+			
+			String sql = "SELECT * FROM productdetail";
+			if(productID!=0)
+				sql+=" WHERE¡¡productID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setInt(1, productID);
+			if(productID!=0)
+				pst.setInt(1, productID);
 			ResultSet rs = pst.executeQuery();
 			while(rs.next()){
 				BeanProductDetail p = new BeanProductDetail();

@@ -3,7 +3,6 @@ package com.htc.ui;
 import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Checkbox;
-import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

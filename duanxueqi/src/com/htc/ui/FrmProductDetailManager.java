@@ -22,50 +22,46 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import com.htc.control.ProductDetailManager;
 import com.htc.control.ProductManager;
-import com.htc.control.ProductTypeManager;
 import com.htc.control.RawManager;
-import com.htc.control.SupplierManager;
 import com.htc.model.BeanProduct;
-import com.htc.model.BeanProductType;
+import com.htc.model.BeanProductDetail;
 import com.htc.model.BeanRaw;
-import com.htc.model.BeanSupplier;
 import com.htc.util.BaseException;
 
-public class FrmProductManager extends JDialog implements ActionListener {
+public class FrmProductDetailManager extends JDialog implements ActionListener {
 	private JPanel toolBar = new JPanel();
-	private Button btnAdd = new Button("添加产品");
-	private Button btnModify = new Button("修改产品");
-	private Button btnDelete = new Button("删除产品");
-	private Map<String, BeanProductType> productTypeMap_name = new HashMap<String, BeanProductType>();
-	private Map<Integer, BeanProductType> productTypeMap_id = new HashMap<Integer, BeanProductType>();
-	private JComboBox cmbProducttype = null;
-	private JTextField edtKeyword = new JTextField(10);
+	private Button btnAdd = new Button("添加原材料需求");
+	private Button btnModify = new Button("修改原材料需求");
+	private Button btnDelete = new Button("删除原材料需求");
+	private Map<String, BeanProduct> productMap_name = new HashMap<String, BeanProduct>();
+	private Map<Integer, BeanProduct> productMap_id = new HashMap<Integer, BeanProduct>();
+	private Map<Integer, BeanRaw> rawMap_name = new HashMap<Integer, BeanRaw>();
+	private JComboBox cmbProduct = null;
 	private Button btnSearch = new Button("查询");
-	private Object tblTitle[] = { "产品ID", "产品名称", "产品价格", "产品类别" };
+	private Object tblTitle[] = { "产品ID", "原材料ID", "数量",};
 	private Object tblData[][];
-	List<BeanProduct> bp;
+	List<BeanProductDetail> bp;
 	DefaultTableModel tablmod = new DefaultTableModel();
 	private JTable dataTable = new JTable(tablmod);
 
 	private void reloadTable() {
 		try {
-			int n = this.cmbProducttype.getSelectedIndex();
+			int n = this.cmbProduct.getSelectedIndex();
 			int ptId = 0;
 			if (n >= 0) {
-				String rtname = this.cmbProducttype.getSelectedItem().toString();
-				BeanProductType rt = this.productTypeMap_name.get(rtname);
+				String rtname = this.cmbProduct.getSelectedItem().toString();
+				BeanProduct rt = this.productMap_name.get(rtname);
 				if (rt != null)
-					ptId = rt.getProductTypeID();
+					ptId = rt.getProductID();
 			}
-			bp = (new ProductManager()).searchProduct(this.edtKeyword.getText(), ptId);
+			bp = (new ProductDetailManager()).loadProductDetail(ptId);
 			tblData = new Object[bp.size()][4];
 			for (int i = 0; i < bp.size(); i++) {
 				tblData[i][0] = bp.get(i).getProductID();
-				tblData[i][1] = bp.get(i).getProductName();
-				tblData[i][2] = bp.get(i).getProductPrice();
-				BeanProductType t = this.productTypeMap_id.get(bp.get(i).getProductTypeID());
-				tblData[i][3] = t == null ? "" : t.getProductTypeName();
+				tblData[i][1] = bp.get(i).getRawID();
+				tblData[i][2] = bp.get(i).getQuantity();
 			}
 			tablmod.setDataVector(tblData, tblTitle);
 			this.dataTable.validate();
@@ -76,19 +72,23 @@ public class FrmProductManager extends JDialog implements ActionListener {
 		}
 	}
 
-	public FrmProductManager(Frame f, String s, boolean b) {
+	public FrmProductDetailManager(Frame f, String s, boolean b) {
 		super(f, s, b);
-		List<BeanProductType> types = null;
+		List<BeanProduct> types = null;
 		try {
-			types = (new ProductTypeManager()).loadAllProductType();
+			types = (new ProductManager()).loadAllProduct();
 			String[] strTypes = new String[types.size() + 1];
 			strTypes[0] = "";
 			for (int i = 0; i < types.size(); i++) {
-				productTypeMap_name.put(types.get(i).getProductTypeName(), types.get(i));
-				productTypeMap_id.put(types.get(i).getProductTypeID(), types.get(i));
-				strTypes[i + 1] = types.get(i).getProductTypeName();
+				productMap_name.put(types.get(i).getProductName(), types.get(i));
+				productMap_id.put(types.get(i).getProductID(), types.get(i));
+				strTypes[i + 1] = types.get(i).getProductName();
 			}
-			cmbProducttype = new JComboBox(strTypes);
+			cmbProduct = new JComboBox(strTypes);
+			List<BeanRaw> types1 = (new RawManager()).loadAllRaw();
+			for (int i = 0; i < types1.size(); i++) {
+				rawMap_name.put(types1.get(i).getRawID(), types1.get(i));
+			}
 		} catch (BaseException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -97,9 +97,7 @@ public class FrmProductManager extends JDialog implements ActionListener {
 		toolBar.add(btnAdd);
 		toolBar.add(btnModify);
 		toolBar.add(this.btnDelete);
-		toolBar.add(cmbProducttype);
-		toolBar.add(edtKeyword);
-		toolBar.add(btnSearch);
+		toolBar.add(cmbProduct);
 		this.getContentPane().add(toolBar, BorderLayout.NORTH);
 		// 提取现有数据
 		this.reloadTable();
@@ -128,40 +126,40 @@ public class FrmProductManager extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == this.btnAdd) {
-			FrmProductManager_Add dlg = new FrmProductManager_Add(this, "添加产品类别", true, this.productTypeMap_name);
+			FrmProductDetailManager_Add dlg = new FrmProductDetailManager_Add(this, "添加生产细节", true, this.productMap_id, this.rawMap_name);
 			dlg.setVisible(true);
-			if (dlg.getProduct() != null) {// 刷新表格
+			if (dlg.getProductDetail() != null) {// 刷新表格
 				this.reloadTable();
 			}
-		} else if (e.getSource() == this.btnModify) {
+		} 
+		else if (e.getSource() == this.btnModify) {
 			int i = this.dataTable.getSelectedRow();
 			if (i < 0) {
 				JOptionPane.showMessageDialog(null, "请选择产品类别", "提示", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			BeanProduct bpt = this.bp.get(i);
-			FrmProductManager_Modify dlg = new FrmProductManager_Modify(this, "修改产品", true, this.productTypeMap_name,
-					bpt);
+			BeanProductDetail bpt = this.bp.get(i);
+			FrmProductDetailManager_Modify dlg = new FrmProductDetailManager_Modify(this, "修改产品", true, bpt);
 			dlg.setVisible(true);
-			if (dlg.getProduct() != null) {// 刷新表格
-				this.reloadTable();
-			}
-
-		} else if (e.getSource() == this.btnDelete) {
-			int i = this.dataTable.getSelectedRow();
-			if (i < 0) {
-				JOptionPane.showMessageDialog(null, "请选择产品类别", "提示", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			BeanProduct bpt = this.bp.get(i);
-			FrmProductManager_Del dlg = new FrmProductManager_Del(this, "修改产品", true,bpt);
-			dlg.setVisible(true);
-			if (dlg.getProduct() != null) {// 刷新表格
+			if (dlg.getProductDetail() != null) {// 刷新表格
 				this.reloadTable();
 			}
 		}
-		else if (e.getSource() == this.btnSearch) {
-			this.reloadTable();
-		}
+//		else if (e.getSource() == this.btnDelete) {
+//			int i = this.dataTable.getSelectedRow();
+//			if (i < 0) {
+//				JOptionPane.showMessageDialog(null, "请选择产品类别", "提示", JOptionPane.ERROR_MESSAGE);
+//				return;
+//			}
+//			BeanProduct bpt = this.bp.get(i);
+//			FrmProductManager_Del dlg = new FrmProductManager_Del(this, "修改产品", true,bpt);
+//			dlg.setVisible(true);
+//			if (dlg.getProduct() != null) {// 刷新表格
+//				this.reloadTable();
+//			}
+//		}
+//		else if (e.getSource() == this.btnSearch) {
+//			this.reloadTable();
+//		}
 	}
 }
