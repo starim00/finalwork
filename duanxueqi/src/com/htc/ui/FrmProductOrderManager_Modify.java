@@ -20,22 +20,21 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.htc.control.OrderManager;
-import com.htc.model.BeanRaw;
-import com.htc.model.BeanRawOrder;
+import com.htc.model.BeanProduct;
+import com.htc.model.BeanProductOrder;
 import com.htc.util.BaseException;
 
-public class FrmRawOrderManager_Add extends JDialog implements ItemListener,ActionListener {
-	private BeanRawOrder br = null;
-
+public class FrmProductOrderManager_Modify extends JDialog implements ItemListener,ActionListener {
+	private BeanProductOrder br = null;
 	private JPanel toolBar = new JPanel();
 	private JPanel workPane = new JPanel();
 	private Button btnOk = new Button("确定");
 	private Button btnCancel = new Button("取消");
-	private JLabel labelRawID = new JLabel("原材料ID:");
+	private JLabel labelRawID = new JLabel("产品ID:");
 	private JLabel labelQuantity = new JLabel("数量");
-	private JLabel labelPrice = new JLabel("原材料价格:");
+	private JLabel labelPrice = new JLabel("产品价格:");
 
-	private Map<Integer,BeanRaw> rawMap_name=null;
+	private Map<Integer,BeanProduct> productMap_name=null;
 	private JComboBox cmbRaw=null;
 	private JTextField edtQuantity = new JTextField(20);
 	private JLabel edtPrice = new JLabel();
@@ -43,27 +42,38 @@ public class FrmRawOrderManager_Add extends JDialog implements ItemListener,Acti
 	private JPanel pricePane = new JPanel();
 	private JPanel quantityPane = new JPanel();
 	
-	public FrmRawOrderManager_Add(JDialog f, String s, boolean b ,Map<Integer, BeanRaw> brMap) {
+	public FrmProductOrderManager_Modify(JDialog f, String s, boolean b ,Map<Integer, BeanProduct> brMap, BeanProductOrder bro) {
 		super(f, s, b);
-		this.rawMap_name=brMap;
+		this.productMap_name=brMap;
+		br=bro;
+		BeanProduct rr = null;
+		BeanProduct rr2 = null;
 		toolBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		toolBar.add(btnOk);
 		toolBar.add(btnCancel);
 		this.getContentPane().add(toolBar, BorderLayout.SOUTH);
-		idPane.add(labelRawID);
-		String[] strTypes=new String[this.rawMap_name.size()+1];
+		String[] strTypes=new String[this.productMap_name.size()+1];
 		strTypes[0]="";
-		java.util.Iterator<BeanRaw> itRt=this.rawMap_name.values().iterator();
+		java.util.Iterator<BeanProduct> itRt=this.productMap_name.values().iterator();
 		int i=1;
+		int oldIndex=0;
 		while(itRt.hasNext()){
-			strTypes[i]=Integer.toString(itRt.next().getRawID());
+			rr=itRt.next();
+			strTypes[i]=Integer.toString(rr.getProductID());
+			if(this.br.getProductID()==rr.getProductID()){
+				oldIndex=i;
+				rr2=rr;
+			}
 			i++;
 		}
 		cmbRaw=new JComboBox(strTypes);
+		this.cmbRaw.setSelectedIndex(oldIndex);
+		idPane.add(labelRawID);
 		idPane.add(cmbRaw);
 		pricePane.add(labelPrice);
 		pricePane.add(edtPrice);
-		
+		edtPrice.setText(Double.toString(rr2.getProductPrice()));
+		edtQuantity.setText(Integer.toString(br.getQuantity()));
 		quantityPane.add(labelQuantity);
 		quantityPane.add(edtQuantity);
 		idPane.setSize(250,100);
@@ -96,19 +106,17 @@ public class FrmRawOrderManager_Add extends JDialog implements ItemListener,Acti
 			return;
 		}
 		else if(e.getSource()==this.btnOk){
-			
-			br=new BeanRawOrder();
 			Integer ptName=new Integer(this.cmbRaw.getSelectedItem().toString());
-			BeanRaw brt = this.rawMap_name.get(ptName);
+			BeanProduct brt = this.productMap_name.get(ptName);
 			if(brt==null){
 				JOptionPane.showMessageDialog(null, "请选择订单","错误",JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			br.setRawID(brt.getRawID());
+			br.setProductID(brt.getProductID());
 			br.setQuantity(Integer.parseInt(edtQuantity.getText()));
 			try {
 				OrderManager rm = new OrderManager();
-				rm.createRawOrder(br);
+				rm.modifyProductOrder(br);
 				this.setVisible(false);
 			} catch (BaseException e1) {
 				this.br=null;
@@ -116,7 +124,7 @@ public class FrmRawOrderManager_Add extends JDialog implements ItemListener,Acti
 			}
 		}
 	}
-	public BeanRawOrder getRawOrder() {
+	public BeanProductOrder getProductOrder() {
 		return br;
 	}
 
@@ -125,12 +133,12 @@ public class FrmRawOrderManager_Add extends JDialog implements ItemListener,Acti
 		// TODO Auto-generated method stub
 		if(e.getStateChange()==ItemEvent.SELECTED){
 			Integer ptName=new Integer(this.cmbRaw.getSelectedItem().toString());
-			BeanRaw brt = this.rawMap_name.get(ptName);
+			BeanProduct brt = this.productMap_name.get(ptName);
 			if(brt==null){
 				edtPrice.setText("0");
 			}
 			else{
-				edtPrice.setText(Double.toString(brt.getPrice()));
+				edtPrice.setText(Double.toString(brt.getProductPrice()));
 			}
 		}
 	}

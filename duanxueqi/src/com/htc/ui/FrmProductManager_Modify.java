@@ -65,7 +65,7 @@ public class FrmProductManager_Modify extends JDialog implements ActionListener 
 		while(itRt.hasNext()){
 			BeanProductType pt=itRt.next();
 			strTypes[i]=pt.getProductTypeName();
-			if(this.bp.getProductTypeID()==bp.getProductTypeID()){
+			if(this.bp.getProductTypeID()==pt.getProductTypeID()){
 				oldIndex=i;
 			}
 			i++;

@@ -22,23 +22,26 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import com.htc.control.OrderManager;
+import com.htc.control.ProductManager;
 import com.htc.control.RawManager;
+import com.htc.model.BeanProduct;
+import com.htc.model.BeanProductOrder;
 import com.htc.model.BeanRaw;
 import com.htc.model.BeanRawOrder;
 import com.htc.util.BaseException;
 
-public class FrmRawOrderManager extends JDialog implements ActionListener {
+public class FrmProductOrderManager extends JDialog implements ActionListener {
 	private JPanel toolBar = new JPanel();
 	private Button btnAdd = new Button("添加订单");
 	private Button btnModify = new Button("修改订单");
 	private Button btnDone = new Button("完成订单");
 	private Button btnDelete = new Button("删除订单");
-	private Map<Integer, BeanRaw> rawMap_name = new HashMap<Integer, BeanRaw>();
+	private Map<Integer, BeanProduct> productMap_name = new HashMap<Integer, BeanProduct>();
 	private JComboBox cmbRaw = null;
 	private Button btnSearch = new Button("查询");
-	private Object tblTitle[] = { "原材料订单ID", "原材料ID", "数量", "价格", "完成情况" };
+	private Object tblTitle[] = { "产品订单ID", "产品ID", "客户ID", "数量", "价格", "完成情况" };
 	private Object tblData[][];
-	List<BeanRawOrder> bro;
+	List<BeanProductOrder> bpo;
 	DefaultTableModel tablmod = new DefaultTableModel();
 	private JTable dataTable = new JTable(tablmod);
 
@@ -48,19 +51,19 @@ public class FrmRawOrderManager extends JDialog implements ActionListener {
 			int ptId = 0;
 			if (n > 0) {
 				Integer rtname = new Integer(this.cmbRaw.getSelectedItem().toString());
-				BeanRaw br = this.rawMap_name.get(rtname);
+				BeanProduct br = this.productMap_name.get(rtname);
 				if (br != null)
-					ptId = br.getRawID();
+					ptId = br.getProductID();
 			}
-			bro = (new OrderManager()).loadAllRawOrder(ptId);
-			tblData = new Object[bro.size()][5];
-			for (int i = 0; i < bro.size(); i++) {
-				tblData[i][0] = bro.get(i).getRawOrderID();
-				tblData[i][1] = bro.get(i).getRawID();
-				tblData[i][2] = bro.get(i).getQuantity();
-				BeanRaw r = new RawManager().searchByID(bro.get(i).getRawID());
-				tblData[i][3] = r.getPrice();
-				if (bro.get(i).isDone())
+			bpo = (new OrderManager()).loadAllProductOrder(ptId);
+			tblData = new Object[bpo.size()][5];
+			for (int i = 0; i < bpo.size(); i++) {
+				tblData[i][0] = bpo.get(i).getProductOrderID();
+				tblData[i][1] = bpo.get(i).getProductID();
+				tblData[i][2] = bpo.get(i).getQuantity();
+				BeanProduct r = new ProductManager().searchByID(bpo.get(i).getProductID());
+				tblData[i][3] = r.getProductPrice();
+				if (bpo.get(i).isDone())
 					tblData[i][4] = "已完成";
 				else
 					tblData[i][4] = "未完成";
@@ -74,16 +77,16 @@ public class FrmRawOrderManager extends JDialog implements ActionListener {
 		}
 	}
 
-	public FrmRawOrderManager(Frame f, String s, boolean b) {
+	public FrmProductOrderManager(Frame f, String s, boolean b) {
 		super(f, s, b);
-		List<BeanRaw> types = null;
+		List<BeanProduct> types = null;
 		try {
-			types = (new RawManager()).loadAllRaw();
+			types = (new ProductManager()).loadAllProduct();
 			String[] strTypes = new String[types.size() + 1];
 			strTypes[0] = "";
 			for (int i = 0; i < types.size(); i++) {
-				rawMap_name.put(types.get(i).getRawID(), types.get(i));
-				strTypes[i + 1] = Integer.toString(types.get(i).getRawID());
+				productMap_name.put(types.get(i).getProductID(), types.get(i));
+				strTypes[i + 1] = Integer.toString(types.get(i).getProductID());
 			}
 			cmbRaw = new JComboBox(strTypes);
 		} catch (BaseException e1) {
@@ -126,9 +129,9 @@ public class FrmRawOrderManager extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == this.btnAdd) {
-			FrmRawOrderManager_Add dlg = new FrmRawOrderManager_Add(this, "添加订单", true, rawMap_name);
+			FrmProductOrderManager_Add dlg = new FrmProductOrderManager_Add(this, "添加订单", true, productMap_name);
 			dlg.setVisible(true);
-			if (dlg.getRawOrder() != null) {// 刷新表格
+			if (dlg.getProductOrder() != null) {// 刷新表格
 				this.reloadTable();
 			}
 		} else if (e.getSource() == this.btnModify) {
@@ -137,10 +140,10 @@ public class FrmRawOrderManager extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(null, "请选择订单", "提示", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			BeanRawOrder b = this.bro.get(i);
-			FrmRawOrderManager_Modify dlg = new FrmRawOrderManager_Modify(this, "修改订单", true, rawMap_name, b);
+			BeanProductOrder b = this.bpo.get(i);
+			FrmProductOrderManager_Modify dlg = new FrmProductOrderManager_Modify(this, "修改订单", true, productMap_name, b);
 			dlg.setVisible(true);
-			if (dlg.getRawOrder() != null) {// 刷新表格
+			if (dlg.getProductOrder() != null) {// 刷新表格
 				this.reloadTable();
 			}
 		} else if (e.getSource() == this.btnDelete) {
@@ -149,11 +152,11 @@ public class FrmRawOrderManager extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(null, "请选择订单", "提示", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			BeanRawOrder b = this.bro.get(i);
-			if (JOptionPane.showConfirmDialog(this, "确定删除" + b.getRawOrderID() + "吗？", "确认",
+			BeanProductOrder b = this.bpo.get(i);
+			if (JOptionPane.showConfirmDialog(this, "确定删除" + b.getProductOrderID() + "吗？", "确认",
 					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 				try {
-					(new OrderManager()).deleteRawOrder(b);
+					(new OrderManager()).deleteProductOrder(b);
 					this.reloadTable();
 				} catch (BaseException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
@@ -166,9 +169,9 @@ public class FrmRawOrderManager extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(null, "请选择订单", "提示", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			BeanRawOrder b = this.bro.get(i);
+			BeanProductOrder b = this.bpo.get(i);
 			try {
-				(new OrderManager()).doneRawOrder(b);
+				(new OrderManager()).doneProductOrder(b);
 				this.reloadTable();
 			} catch (BaseException e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);

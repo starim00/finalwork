@@ -19,12 +19,11 @@ public class ProductOrderDAO implements IProductOrderDAO {
 		// TODO Auto-generated method stub
 		try {
 			Connection conn = DBUtil.getConnection();
-			String sql = "INSERT INTO productorder(productID,customerID,quantity,price) values (?,?,?,?)";
+			String sql = "INSERT INTO productorder(productID,customerID,quantity) values (?,?,?)";
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, d.getProductID());
 			pst.setInt(2, d.getCustomerID());
 			pst.setInt(3, d.getQuantity());
-			pst.setDouble(4, d.getPrice());
 			pst.execute();
 			pst.close();
 			conn.close();
@@ -58,14 +57,13 @@ public class ProductOrderDAO implements IProductOrderDAO {
 		// TODO Auto-generated method stub
 		try {
 			Connection conn = DBUtil.getConnection();
-			String sql = "UPDATE productorder SET productID = ?,customerID= ?,quantity = ?,price = ?,isdone = ? WHERE productOrderID = ?";
+			String sql = "UPDATE productorder SET productID = ?,customerID= ?,quantity = ?,isdone = ? WHERE productOrderID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, d.getProductID());
 			pst.setInt(2, d.getCustomerID());
 			pst.setInt(3, d.getQuantity());
-			pst.setDouble(4, d.getPrice());
-			pst.setBoolean(5, d.isDone());
-			pst.setInt(6, d.getProductOrderID());
+			pst.setBoolean(4, d.isDone());
+			pst.setInt(5, d.getProductOrderID());
 			pst.execute();
 			pst.close();
 			conn.close();
@@ -92,8 +90,7 @@ public class ProductOrderDAO implements IProductOrderDAO {
 				p.setProductID(rs.getInt(2));
 				p.setCustomerID(rs.getInt(3));
 				p.setQuantity(rs.getInt(4));
-				p.setPrice(rs.getDouble(5));
-				p.setDone(rs.getBoolean(6));
+				p.setDone(rs.getBoolean(5));
 				product.add(p);
 			}
 			rs.close();
@@ -122,8 +119,7 @@ public class ProductOrderDAO implements IProductOrderDAO {
 				p.setProductID(rs.getInt(2));
 				p.setCustomerID(rs.getInt(3));
 				p.setQuantity(rs.getInt(4));
-				p.setPrice(rs.getDouble(5));
-				p.setDone(rs.getBoolean(6));
+				p.setDone(rs.getBoolean(5));
 				rs.close();
 				pst.close();
 				conn.close();
@@ -158,8 +154,7 @@ public class ProductOrderDAO implements IProductOrderDAO {
 				p.setProductID(rs.getInt(2));
 				p.setCustomerID(rs.getInt(3));
 				p.setQuantity(rs.getInt(4));
-				p.setPrice(rs.getDouble(5));
-				p.setDone(rs.getBoolean(6));
+				p.setDone(rs.getBoolean(5));
 				product.add(p);
 			}
 			rs.close();

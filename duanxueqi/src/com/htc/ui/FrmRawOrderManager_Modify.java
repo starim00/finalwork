@@ -24,9 +24,8 @@ import com.htc.model.BeanRaw;
 import com.htc.model.BeanRawOrder;
 import com.htc.util.BaseException;
 
-public class FrmRawOrderManager_Add extends JDialog implements ItemListener,ActionListener {
+public class FrmRawOrderManager_Modify extends JDialog implements ItemListener,ActionListener {
 	private BeanRawOrder br = null;
-
 	private JPanel toolBar = new JPanel();
 	private JPanel workPane = new JPanel();
 	private Button btnOk = new Button("È·¶¨");
@@ -43,27 +42,38 @@ public class FrmRawOrderManager_Add extends JDialog implements ItemListener,Acti
 	private JPanel pricePane = new JPanel();
 	private JPanel quantityPane = new JPanel();
 	
-	public FrmRawOrderManager_Add(JDialog f, String s, boolean b ,Map<Integer, BeanRaw> brMap) {
+	public FrmRawOrderManager_Modify(JDialog f, String s, boolean b ,Map<Integer, BeanRaw> brMap, BeanRawOrder bro) {
 		super(f, s, b);
 		this.rawMap_name=brMap;
+		br=bro;
+		BeanRaw rr = null;
+		BeanRaw rr2 = null;
 		toolBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		toolBar.add(btnOk);
 		toolBar.add(btnCancel);
 		this.getContentPane().add(toolBar, BorderLayout.SOUTH);
-		idPane.add(labelRawID);
 		String[] strTypes=new String[this.rawMap_name.size()+1];
 		strTypes[0]="";
 		java.util.Iterator<BeanRaw> itRt=this.rawMap_name.values().iterator();
 		int i=1;
+		int oldIndex=0;
 		while(itRt.hasNext()){
-			strTypes[i]=Integer.toString(itRt.next().getRawID());
+			rr=itRt.next();
+			strTypes[i]=Integer.toString(rr.getRawID());
+			if(this.br.getRawID()==rr.getRawID()){
+				oldIndex=i;
+				rr2=rr;
+			}
 			i++;
 		}
 		cmbRaw=new JComboBox(strTypes);
+		this.cmbRaw.setSelectedIndex(oldIndex);
+		idPane.add(labelRawID);
 		idPane.add(cmbRaw);
 		pricePane.add(labelPrice);
 		pricePane.add(edtPrice);
-		
+		edtPrice.setText(Double.toString(rr2.getPrice()));
+		edtQuantity.setText(Integer.toString(br.getQuantity()));
 		quantityPane.add(labelQuantity);
 		quantityPane.add(edtQuantity);
 		idPane.setSize(250,100);
@@ -96,8 +106,6 @@ public class FrmRawOrderManager_Add extends JDialog implements ItemListener,Acti
 			return;
 		}
 		else if(e.getSource()==this.btnOk){
-			
-			br=new BeanRawOrder();
 			Integer ptName=new Integer(this.cmbRaw.getSelectedItem().toString());
 			BeanRaw brt = this.rawMap_name.get(ptName);
 			if(brt==null){
@@ -108,7 +116,7 @@ public class FrmRawOrderManager_Add extends JDialog implements ItemListener,Acti
 			br.setQuantity(Integer.parseInt(edtQuantity.getText()));
 			try {
 				OrderManager rm = new OrderManager();
-				rm.createRawOrder(br);
+				rm.modifyRawOrder(br);
 				this.setVisible(false);
 			} catch (BaseException e1) {
 				this.br=null;

@@ -35,6 +35,8 @@ public class OrderManager {
 			throw new BaseException("该订单已完成");
 		} else {
 			BeanRawStock sto = new RawStockDAO().qryRawStock(o1.getRawID());
+			if(sto==null)
+				throw new BaseException("无该商品库存");
 			if (sto.getStockQuantity() < -o1.getQuantity() || sto == null) {
 				throw new BaseException("库存数量不足，无法完成订单");
 			} else {

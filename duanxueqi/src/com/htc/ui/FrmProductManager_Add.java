@@ -32,18 +32,21 @@ public class FrmProductManager_Add extends JDialog implements ActionListener {
 	private Button btnCancel = new Button("取消");
 	private JLabel labelName = new JLabel(" 产品名称:");
 	private JLabel labelPrice = new JLabel(" 产品价格:");
-	private JLabel labelProductTypeID = new JLabel("产品类型");
+	private JLabel labelProductTypeID = new JLabel(" 产品类型");
 	private JLabel labelInt = new JLabel("　 简介:");
-
+	private JLabel labelStock = new JLabel(" 库存地址");
+	
 	private JTextField edtName = new JTextField(20);
 	private JTextField edtPrice = new JTextField(20);
 	private Map<String,BeanProductType> productTypeMap_name=null;
 	private JComboBox cmbProducttype=null;
+	private JTextField edtStock = new JTextField(20);
 	private TextArea edtInt = new TextArea(3,35);
 
 	private JPanel namePane = new JPanel();
 	private JPanel pricePane = new JPanel();
 	private JPanel productTypePane = new JPanel();
+	private JPanel stockPane = new JPanel();
 	private JPanel IntPane = new JPanel();
 	
 	public FrmProductManager_Add(JDialog f, String s, boolean b ,Map<String, BeanProductType> ptMap) {
@@ -69,7 +72,8 @@ public class FrmProductManager_Add extends JDialog implements ActionListener {
 		}
 		cmbProducttype=new JComboBox(strTypes);
 		productTypePane.add(cmbProducttype);
-		
+		stockPane.add(labelStock);
+		stockPane.add(edtStock);
 		IntPane.add(labelInt);
 		IntPane.add(edtInt);
 		namePane.setSize(250,100);
@@ -80,6 +84,7 @@ public class FrmProductManager_Add extends JDialog implements ActionListener {
 		workPane.add(namePane);
 		workPane.add(pricePane);
 		workPane.add(IntPane);
+		workPane.add(stockPane);
 		workPane.add(productTypePane);
 		namePane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		pricePane.setAlignmentX(Component.LEFT_ALIGNMENT);
