@@ -22,7 +22,8 @@ public class FrmProductManager_Del extends JDialog implements ActionListener {
 	private Button btnOk = new Button("确定");
 	private Button btnCancel = new Button("取消");
 	private Checkbox isDel = new Checkbox();
-	public FrmProductManager_Del(JDialog f, String s, boolean b,BeanProduct p) {
+
+	public FrmProductManager_Del(JDialog f, String s, boolean b, BeanProduct p) {
 		// TODO Auto-generated constructor stub
 		super(f, s, b);
 		toolBar.add(btnOk);
@@ -31,8 +32,8 @@ public class FrmProductManager_Del extends JDialog implements ActionListener {
 		isDel.setLabel("同时删除订单和出入库记录");
 		workPane.add(isDel);
 		this.getContentPane().add(workPane, BorderLayout.CENTER);
-		bp=p;
-		this.setSize(350,150);
+		bp = p;
+		this.setSize(350, 150);
 		// 屏幕居中显示
 		double width = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		double height = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
@@ -42,25 +43,26 @@ public class FrmProductManager_Del extends JDialog implements ActionListener {
 		this.btnOk.addActionListener(this);
 		this.btnCancel.addActionListener(this);
 	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getSource()==this.btnCancel) {
+		if (e.getSource() == this.btnCancel) {
 			this.setVisible(false);
 			return;
-		}
-		else if(e.getSource()==this.btnOk){
+		} else if (e.getSource() == this.btnOk) {
 			try {
 				ProductManager pm = new ProductManager();
 				pm.deleteProduct(bp, isDel.getState());
 				this.setVisible(false);
 			} catch (BaseException e1) {
 				// TODO Auto-generated catch block
-				this.bp=null;
-				JOptionPane.showMessageDialog(null, e1.getMessage(),"错误",JOptionPane.ERROR_MESSAGE);
+				this.bp = null;
+				JOptionPane.showMessageDialog(null, e1.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
+
 	public BeanProduct getProduct() {
 		return bp;
 	}

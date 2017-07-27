@@ -41,7 +41,7 @@ public class ProductDetailDAO implements IProductDetailDAO {
 			Connection conn = DBUtil.getConnection();
 			String sql = "DELETE FROM productdetail WHERE productID = ? AND rawID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setInt(1,d.getProductID());
+			pst.setInt(1, d.getProductID());
 			pst.setInt(2, d.getRawID());
 			pst.execute();
 			pst.close();
@@ -78,15 +78,15 @@ public class ProductDetailDAO implements IProductDetailDAO {
 		ArrayList<BeanProductDetail> product = new ArrayList<BeanProductDetail>();
 		try {
 			Connection conn = DBUtil.getConnection();
-			
+
 			String sql = "SELECT * FROM productdetail";
-			if(productID!=0)
-				sql+=" WHERE productID = ?";
+			if (productID != 0)
+				sql += " WHERE productID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			if(productID!=0)
+			if (productID != 0)
 				pst.setInt(1, productID);
 			ResultSet rs = pst.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				BeanProductDetail p = new BeanProductDetail();
 				p.setProductID(rs.getInt(1));
 				p.setRawID(rs.getInt(2));
@@ -105,7 +105,7 @@ public class ProductDetailDAO implements IProductDetailDAO {
 	}
 
 	@Override
-	public BeanProductDetail getProductDetail(int productID ,int rawID) throws BaseException {
+	public BeanProductDetail getProductDetail(int productID, int rawID) throws BaseException {
 		// TODO Auto-generated method stub
 		BeanProductDetail p = new BeanProductDetail();
 		try {
@@ -115,7 +115,7 @@ public class ProductDetailDAO implements IProductDetailDAO {
 			pst.setInt(1, productID);
 			pst.setInt(2, rawID);
 			ResultSet rs = pst.executeQuery();
-			if(rs.next()){
+			if (rs.next()) {
 				p.setProductID(rs.getInt(1));
 				p.setRawID(rs.getInt(2));
 				p.setQuantity(rs.getInt(3));
@@ -123,8 +123,7 @@ public class ProductDetailDAO implements IProductDetailDAO {
 				pst.close();
 				conn.close();
 				return p;
-			}
-			else{
+			} else {
 				rs.close();
 				pst.close();
 				conn.close();
@@ -143,15 +142,15 @@ public class ProductDetailDAO implements IProductDetailDAO {
 		ArrayList<BeanProductDetail> product = new ArrayList<BeanProductDetail>();
 		try {
 			Connection conn = DBUtil.getConnection();
-			
+
 			String sql = "SELECT * FROM productdetail";
-			if(rawID!=0)
-				sql+=" WHERE¡¡rawID = ?";
+			if (rawID != 0)
+				sql += " WHERE¡¡rawID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			if(rawID!=0)
+			if (rawID != 0)
 				pst.setInt(1, rawID);
 			ResultSet rs = pst.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				BeanProductDetail p = new BeanProductDetail();
 				p.setProductID(rs.getInt(1));
 				p.setRawID(rs.getInt(2));
@@ -176,7 +175,7 @@ public class ProductDetailDAO implements IProductDetailDAO {
 			Connection conn = DBUtil.getConnection();
 			String sql = "DELETE FROM productdetail WHERE productID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setInt(1,productID);
+			pst.setInt(1, productID);
 			pst.execute();
 			pst.close();
 			conn.close();

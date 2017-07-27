@@ -7,6 +7,8 @@ import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.HashMap;
@@ -37,12 +39,13 @@ public class FrmRawManager extends JDialog implements ActionListener {
 	private Map<String, BeanSupplier> supMap_name = new HashMap<String, BeanSupplier>();
 	private JComboBox cmbSupplier = null;
 	private Button btnSearch = new Button("查询");
-	private Object tblTitle[]={"产品ID","产品名称","价格","供货商ID"};
+	private Object tblTitle[] = { "产品ID", "产品名称", "价格", "供货商ID" };
 	private Object tblData[][];
 	List<BeanRaw> br;
-	DefaultTableModel tablmod=new DefaultTableModel();
-	private JTable dataTable=new JTable(tablmod);
-	private void reloadTable(){
+	DefaultTableModel tablmod = new DefaultTableModel();
+	private JTable dataTable = new JTable(tablmod);
+
+	private void reloadTable() {
 		try {
 			int n = this.cmbSupplier.getSelectedIndex();
 			int ptId = 0;
@@ -52,18 +55,18 @@ public class FrmRawManager extends JDialog implements ActionListener {
 				if (rt != null)
 					ptId = rt.getSupplierID();
 			}
-			if(ptId==0)
-				br=(new RawManager()).loadAllRaw();
+			if (ptId == 0)
+				br = (new RawManager()).loadAllRaw();
 			else
-				br=(new RawManager()).serchBySupplier(ptId);
-			tblData =new Object[br.size()][4];
-			for(int i=0;i<br.size();i++){
-				tblData[i][0]=br.get(i).getRawID();
-				tblData[i][1]=br.get(i).getRawName();
-				tblData[i][2]=br.get(i).getPrice();
-				tblData[i][3]=br.get(i).getSupplier();
+				br = (new RawManager()).serchBySupplier(ptId);
+			tblData = new Object[br.size()][4];
+			for (int i = 0; i < br.size(); i++) {
+				tblData[i][0] = br.get(i).getRawID();
+				tblData[i][1] = br.get(i).getRawName();
+				tblData[i][2] = br.get(i).getPrice();
+				tblData[i][3] = br.get(i).getSupplier();
 			}
-			tablmod.setDataVector(tblData,tblTitle);
+			tablmod.setDataVector(tblData, tblTitle);
 			this.dataTable.validate();
 			this.dataTable.repaint();
 		} catch (BaseException e) {
@@ -71,7 +74,7 @@ public class FrmRawManager extends JDialog implements ActionListener {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public FrmRawManager(Frame f, String s, boolean b) {
 		super(f, s, b);
 		List<BeanSupplier> types = null;
@@ -95,16 +98,15 @@ public class FrmRawManager extends JDialog implements ActionListener {
 		toolBar.add(cmbSupplier);
 		toolBar.add(btnSearch);
 		this.getContentPane().add(toolBar, BorderLayout.NORTH);
-		//提取现有数据
+		// 提取现有数据
 		this.reloadTable();
 		this.getContentPane().add(new JScrollPane(this.dataTable), BorderLayout.CENTER);
-		
+
 		// 屏幕居中显示
 		this.setSize(800, 600);
 		double width = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		double height = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
-		this.setLocation((int) (width - this.getWidth()) / 2,
-				(int) (height - this.getHeight()) / 2);
+		this.setLocation((int) (width - this.getWidth()) / 2, (int) (height - this.getHeight()) / 2);
 
 		this.validate();
 
@@ -114,48 +116,62 @@ public class FrmRawManager extends JDialog implements ActionListener {
 		this.btnSearch.addActionListener(this);
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				//System.exit(0);
+				// System.exit(0);
 			}
 		});
+		this.dataTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int i = FrmRawManager.this.dataTable.getSelectedRow();
+				if (i < 0) {
+					return;
+				}
+				FrmRawManager.this.loadInfo(FrmRawManager.this.br.get(i));
+			}
+
+		});
+	}
+
+	protected void loadInfo(BeanRaw beanRaw) {
+		// TODO Auto-generated method stub
+		FrmRawManager_info dlg = new FrmRawManager_info(this, "添加供货商", true,beanRaw);
+		dlg.setVisible(true);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getSource()==this.btnAdd){
-			FrmRawManager_Add dlg=new FrmRawManager_Add(this,"添加供货商",true,supMap_name);
+		if (e.getSource() == this.btnAdd) {
+			FrmRawManager_Add dlg = new FrmRawManager_Add(this, "添加供货商", true, supMap_name);
 			dlg.setVisible(true);
-			if(dlg.getRaw()!=null){//刷新表格
+			if (dlg.getRaw() != null) {// 刷新表格
 				this.reloadTable();
 			}
-		}
-		else if(e.getSource()==this.btnModify){
-			int i=this.dataTable.getSelectedRow();
-			if(i<0) {
-				JOptionPane.showMessageDialog(null,  "请选择供货商","提示",JOptionPane.ERROR_MESSAGE);
+		} else if (e.getSource() == this.btnModify) {
+			int i = this.dataTable.getSelectedRow();
+			if (i < 0) {
+				JOptionPane.showMessageDialog(null, "请选择供货商", "提示", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			BeanRaw b=this.br.get(i);
-			FrmRawManager_Modify dlg=new FrmRawManager_Modify(this,"修改供货商",true,b);
+			BeanRaw b = this.br.get(i);
+			FrmRawManager_Modify dlg = new FrmRawManager_Modify(this, "修改供货商", true, b);
 			dlg.setVisible(true);
-			if(dlg.getRaw()!=null){//刷新表格
+			if (dlg.getRaw() != null) {// 刷新表格
 				this.reloadTable();
 			}
-		}
-		else if(e.getSource()==this.btnDelete){
-			int i=this.dataTable.getSelectedRow();
-			if(i<0) {
-				JOptionPane.showMessageDialog(null,  "请选择供货商","提示",JOptionPane.ERROR_MESSAGE);
+		} else if (e.getSource() == this.btnDelete) {
+			int i = this.dataTable.getSelectedRow();
+			if (i < 0) {
+				JOptionPane.showMessageDialog(null, "请选择供货商", "提示", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			BeanRaw b=this.br.get(i);
-			FrmRawManager_Del dlg=new FrmRawManager_Del(this,"修改供货商",true,b);
+			BeanRaw b = this.br.get(i);
+			FrmRawManager_Del dlg = new FrmRawManager_Del(this, "修改供货商", true, b);
 			dlg.setVisible(true);
-			if(dlg.getRaw()!=null){//刷新表格
+			if (dlg.getRaw() != null) {// 刷新表格
 				this.reloadTable();
 			}
-		}
-		else if (e.getSource() == this.btnSearch) {
+		} else if (e.getSource() == this.btnSearch) {
 			this.reloadTable();
 		}
 	}

@@ -40,7 +40,7 @@ public class ProductTypeDAO implements IProductTypeDAO {
 			Connection conn = DBUtil.getConnection();
 			String sql = "DELETE FROM producttype WHERE productTypeID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setInt(1,productTypeID);
+			pst.setInt(1, productTypeID);
 			pst.execute();
 			pst.close();
 			conn.close();
@@ -79,9 +79,9 @@ public class ProductTypeDAO implements IProductTypeDAO {
 			Connection conn = DBUtil.getConnection();
 			String sql = "SELECT * FROM producttype WHERE productTypeName like ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setString(1, "%"+productTypeName+"%");
+			pst.setString(1, "%" + productTypeName + "%");
 			ResultSet rs = pst.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				BeanProductType p = new BeanProductType();
 				p.setProductTypeID(rs.getInt(1));
 				p.setProductTypeName(rs.getString(2));
@@ -108,7 +108,7 @@ public class ProductTypeDAO implements IProductTypeDAO {
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, productTypeID);
 			ResultSet rs = pst.executeQuery();
-			if(rs.next()){
+			if (rs.next()) {
 				p.setProductTypeID(rs.getInt(1));
 				p.setProductTypeName(rs.getString(2));
 				p.setIntroduction(rs.getString(3));
@@ -116,8 +116,7 @@ public class ProductTypeDAO implements IProductTypeDAO {
 				pst.close();
 				conn.close();
 				return p;
-			}
-			else{
+			} else {
 				rs.close();
 				pst.close();
 				conn.close();

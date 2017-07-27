@@ -57,32 +57,30 @@ public class FrmProduceManager extends JDialog implements ActionListener {
 				if (rt != null)
 					ptId = rt.getProductID();
 			}
-			if(edtUp.getText().equals("")&&edtDown.getText().equals("")){
-				if(ptId!=0)
-					bp=new ProduceManager().loadByProductID(ptId);
+			if (edtUp.getText().equals("") && edtDown.getText().equals("")) {
+				if (ptId != 0)
+					bp = new ProduceManager().loadByProductID(ptId);
 				else
-					bp=new ProduceManager().loadAllProduce();
-			}
-			else if(!(edtUp.getText().equals("")||edtDown.getText().equals(""))){
+					bp = new ProduceManager().loadAllProduce();
+			} else if (!(edtUp.getText().equals("") || edtDown.getText().equals(""))) {
 				DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-				Date up,down;
+				Date up, down;
 				try {
 					DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
 					up = format1.parse(edtUp.getText());
 					down = format1.parse(edtDown.getText());
-					if(ptId!=0)
-						bp=new ProduceManager().loadByDate(up, down);
+					if (ptId != 0)
+						bp = new ProduceManager().loadByDate(up, down);
 					else
-						bp=new ProduceManager().loadByDate(up, down, ptId);
+						bp = new ProduceManager().loadByDate(up, down, ptId);
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null,"时间格式错误,示例:yyyy-mm-dd","错误",JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "时间格式错误,示例:yyyy-mm-dd", "错误", JOptionPane.ERROR_MESSAGE);
 				}
+			} else {
+				JOptionPane.showMessageDialog(null, "请输入正确的时间", "错误", JOptionPane.ERROR_MESSAGE);
+				bp = new ProduceManager().loadAllProduce();
 			}
-			else{
-				JOptionPane.showMessageDialog(null,"请输入正确的时间","错误",JOptionPane.ERROR_MESSAGE);
-				bp=new ProduceManager().loadAllProduce();
-			}
-			
+
 			tblData = new Object[bp.size()][4];
 			for (int i = 0; i < bp.size(); i++) {
 				tblData[i][0] = bp.get(i).getProduceID();
@@ -152,8 +150,7 @@ public class FrmProduceManager extends JDialog implements ActionListener {
 			if (dlg.getProduce() != null) {// 刷新表格
 				this.reloadTable();
 			}
-		} 
-		else if (e.getSource() == this.btnSearch) {
+		} else if (e.getSource() == this.btnSearch) {
 			this.reloadTable();
 		}
 	}

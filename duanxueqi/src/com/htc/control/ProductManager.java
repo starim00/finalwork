@@ -19,7 +19,7 @@ public class ProductManager {
 
 	public void deleteProduct(BeanProduct p, boolean d) throws BaseException {
 		int flag1 = 0, flag2 = 0;
-		if(new ProductStockDAO().qryProductStock(p.getProductID())!=null)
+		if (new ProductStockDAO().qryProductStock(p.getProductID()) != null)
 			throw new BaseException("该产品还有库存");
 		if (!new ProductOrderDAO().qryProductOrder(p.getProductID()).isEmpty()) {
 			flag1 = 1;
@@ -75,9 +75,9 @@ public class ProductManager {
 			return new ProductDAO().getProduct(productID);
 		}
 	}
-	
+
 	public List<BeanProduct> searchProduct(String productName, int productTypeID) throws BaseException {
 		return new ProductDAO().searchProduct(productName, productTypeID);
 	}
-	
+
 }

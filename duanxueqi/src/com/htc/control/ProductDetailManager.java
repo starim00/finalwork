@@ -8,6 +8,8 @@ import com.htc.util.BaseException;
 
 public class ProductDetailManager {
 	public void createProductDetail(BeanProductDetail d) throws BaseException {
+		if(new ProductDetailDAO().getProductDetail(d.getProductID(), d.getRawID())!=null)
+			throw new BaseException("该产品对于该原材料的需求已经存在");
 		new ProductDetailDAO().createProductDetail(d);
 	}
 

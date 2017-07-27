@@ -17,6 +17,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.htc.control.RawManager;
@@ -45,47 +46,48 @@ public class FrmRawManager_Add extends JDialog implements ActionListener {
 	private JTextField edtName = new JTextField(20);
 	private JTextField edtPrice = new JTextField(20);
 	private JTextField edtStock = new JTextField(20);
-	private Map<String,BeanSupplier> supMap_name=null;
-	private JComboBox cmbSupplier=null;
-	private TextArea edtInt = new TextArea(3,35);
+	private Map<String, BeanSupplier> supMap_name = null;
+	private JComboBox cmbSupplier = null;
+	private JTextArea edtInt = new JTextArea(3, 35);
 
 	private JPanel namePane = new JPanel();
 	private JPanel pricePane = new JPanel();
 	private JPanel supplierPane = new JPanel();
 	private JPanel stockPane = new JPanel();
 	private JPanel IntPane = new JPanel();
-	
-	public FrmRawManager_Add(JDialog f, String s, boolean b ,Map<String, BeanSupplier> bsMap) {
+
+	public FrmRawManager_Add(JDialog f, String s, boolean b, Map<String, BeanSupplier> bsMap) {
 		super(f, s, b);
-		this.supMap_name=bsMap;
+		this.supMap_name = bsMap;
 		toolBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		toolBar.add(btnOk);
 		toolBar.add(btnCancel);
 		this.getContentPane().add(toolBar, BorderLayout.SOUTH);
+		edtInt.setLineWrap(true);
 		namePane.add(labelName);
 		namePane.add(edtName);
 		pricePane.add(labelPrice);
 		pricePane.add(edtPrice);
 		supplierPane.add(labelSupplierID);
-		String[] strTypes=new String[this.supMap_name.size()+1];
-		strTypes[0]="";
-		java.util.Iterator<BeanSupplier> itRt=this.supMap_name.values().iterator();
-		int i=1;
-		while(itRt.hasNext()){
-			strTypes[i]=itRt.next().getSupplierName();
+		String[] strTypes = new String[this.supMap_name.size() + 1];
+		strTypes[0] = "";
+		java.util.Iterator<BeanSupplier> itRt = this.supMap_name.values().iterator();
+		int i = 1;
+		while (itRt.hasNext()) {
+			strTypes[i] = itRt.next().getSupplierName();
 			i++;
 		}
-		cmbSupplier=new JComboBox(strTypes);
+		cmbSupplier = new JComboBox(strTypes);
 		supplierPane.add(cmbSupplier);
 		stockPane.add(labelStockAddress);
 		stockPane.add(edtStock);
 		IntPane.add(labelInt);
 		IntPane.add(edtInt);
-		namePane.setSize(250,100);
-		pricePane.setSize(250,100);
-		supplierPane.setSize(250,100);
-		IntPane.setSize(250,100);
-		stockPane.setSize(250,100);
+		namePane.setSize(250, 100);
+		pricePane.setSize(250, 100);
+		supplierPane.setSize(250, 100);
+		IntPane.setSize(250, 100);
+		stockPane.setSize(250, 100);
 		workPane.setLayout(new BoxLayout(workPane, BoxLayout.Y_AXIS));
 		workPane.add(namePane);
 		workPane.add(pricePane);
@@ -98,7 +100,7 @@ public class FrmRawManager_Add extends JDialog implements ActionListener {
 		stockPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		IntPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.getContentPane().add(workPane, BorderLayout.CENTER);
-		this.setSize(350,250);
+		this.setSize(350, 250);
 		// ∆¡ƒªæ”÷–œ‘ æ
 		double width = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		double height = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
@@ -112,39 +114,40 @@ public class FrmRawManager_Add extends JDialog implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource()==this.btnCancel) {
+		if (e.getSource() == this.btnCancel) {
 			this.setVisible(false);
 			return;
-		}
-		else if(e.getSource()==this.btnOk){
-			
-			br=new BeanRaw();
-			rs=new BeanRawStock();
+		} else if (e.getSource() == this.btnOk) {
+
+			br = new BeanRaw();
+			rs = new BeanRawStock();
 			br.setRawName(edtName.getText());
 			br.setPrice(Double.parseDouble(edtPrice.getText()));
-			String ptName=this.cmbSupplier.getSelectedItem().toString();
+			String ptName = this.cmbSupplier.getSelectedItem().toString();
 			BeanSupplier bpt = this.supMap_name.get(ptName);
-			if(bpt==null){
-				JOptionPane.showMessageDialog(null, "«Î—°‘Òπ©”¶…Ã","¥ÌŒÛ",JOptionPane.ERROR_MESSAGE);
+			if (bpt == null) {
+				JOptionPane.showMessageDialog(null, "«Î—°‘Òπ©”¶…Ã", "¥ÌŒÛ", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			br.setSupplier(bpt.getSupplierID());;
+			br.setSupplier(bpt.getSupplierID());
+			;
 			br.setIntroduction(edtInt.getText());
 			try {
 				RawManager rm = new RawManager();
 				rm.createRaw(br);
 				List<BeanRaw> l = rm.loadAllRaw();
-				rs.setRawID(l.get(l.size()-1).getRawID());
+				rs.setRawID(l.get(l.size() - 1).getRawID());
 				rs.setStockAddress(edtStock.getText());
 				rs.setStockQuantity(0);
 				new StockManager().createRawStock(rs);
 				this.setVisible(false);
 			} catch (BaseException e1) {
-				this.br=null;
-				JOptionPane.showMessageDialog(null, e1.getMessage(),"¥ÌŒÛ",JOptionPane.ERROR_MESSAGE);
+				this.br = null;
+				JOptionPane.showMessageDialog(null, e1.getMessage(), "¥ÌŒÛ", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
+
 	public BeanRaw getRaw() {
 		return br;
 	}

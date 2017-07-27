@@ -21,9 +21,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import com.htc.control.CustomerManager;
 import com.htc.control.OrderManager;
 import com.htc.control.ProductManager;
 import com.htc.control.RawManager;
+import com.htc.model.BeanCustomer;
 import com.htc.model.BeanProduct;
 import com.htc.model.BeanProductOrder;
 import com.htc.model.BeanRaw;
@@ -36,8 +38,9 @@ public class FrmProductOrderManager extends JDialog implements ActionListener {
 	private Button btnModify = new Button("修改订单");
 	private Button btnDone = new Button("完成订单");
 	private Button btnDelete = new Button("删除订单");
-	private Map<Integer, BeanProduct> productMap_name = new HashMap<Integer, BeanProduct>();
-	private JComboBox cmbRaw = null;
+	private Map<Integer, BeanProduct> productMap_id = new HashMap<Integer, BeanProduct>();
+	private Map<Integer, BeanCustomer> cusMap_id = new HashMap<Integer,BeanCustomer>();
+	private JComboBox cmbPro = null;
 	private Button btnSearch = new Button("查询");
 	private Object tblTitle[] = { "产品订单ID", "产品ID", "客户ID", "数量", "价格", "完成情况" };
 	private Object tblData[][];
@@ -47,26 +50,30 @@ public class FrmProductOrderManager extends JDialog implements ActionListener {
 
 	private void reloadTable() {
 		try {
-			int n = this.cmbRaw.getSelectedIndex();
+			int n = this.cmbPro.getSelectedIndex();
 			int ptId = 0;
 			if (n > 0) {
-				Integer rtname = new Integer(this.cmbRaw.getSelectedItem().toString());
-				BeanProduct br = this.productMap_name.get(rtname);
+				Integer rtname = new Integer(this.cmbPro.getSelectedItem().toString());
+				BeanProduct br = this.productMap_id.get(rtname);
 				if (br != null)
 					ptId = br.getProductID();
 			}
 			bpo = (new OrderManager()).loadAllProductOrder(ptId);
-			tblData = new Object[bpo.size()][5];
+			tblData = new Object[bpo.size()][6];
 			for (int i = 0; i < bpo.size(); i++) {
 				tblData[i][0] = bpo.get(i).getProductOrderID();
 				tblData[i][1] = bpo.get(i).getProductID();
-				tblData[i][2] = bpo.get(i).getQuantity();
-				BeanProduct r = new ProductManager().searchByID(bpo.get(i).getProductID());
-				tblData[i][3] = r.getProductPrice();
-				if (bpo.get(i).isDone())
-					tblData[i][4] = "已完成";
+				if(bpo.get(i).getProductID()==0)
+					tblData[i][2] = "";
 				else
-					tblData[i][4] = "未完成";
+					tblData[i][2] = bpo.get(i).getProductID();
+				tblData[i][3] = bpo.get(i).getQuantity();
+				BeanProduct r = new ProductManager().searchByID(bpo.get(i).getProductID());
+				tblData[i][4] = r.getProductPrice();
+				if (bpo.get(i).isDone())
+					tblData[i][5] = "已完成";
+				else
+					tblData[i][5] = "未完成";
 			}
 			tablmod.setDataVector(tblData, tblTitle);
 			this.dataTable.validate();
@@ -85,10 +92,20 @@ public class FrmProductOrderManager extends JDialog implements ActionListener {
 			String[] strTypes = new String[types.size() + 1];
 			strTypes[0] = "";
 			for (int i = 0; i < types.size(); i++) {
-				productMap_name.put(types.get(i).getProductID(), types.get(i));
+				productMap_id.put(types.get(i).getProductID(), types.get(i));
 				strTypes[i + 1] = Integer.toString(types.get(i).getProductID());
 			}
-			cmbRaw = new JComboBox(strTypes);
+			cmbPro = new JComboBox(strTypes);
+		} catch (BaseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		List<BeanCustomer> types1 = null;
+		try {
+			types1 = (new CustomerManager()).loadAllCustomer();
+			for (int i = 0; i < types1.size(); i++) {
+				cusMap_id.put(types1.get(i).getCustomerID(), types1.get(i));
+			}
 		} catch (BaseException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -98,7 +115,7 @@ public class FrmProductOrderManager extends JDialog implements ActionListener {
 		toolBar.add(btnModify);
 		toolBar.add(this.btnDelete);
 		toolBar.add(btnDone);
-		toolBar.add(cmbRaw);
+		toolBar.add(cmbPro);
 		toolBar.add(btnSearch);
 		this.getContentPane().add(toolBar, BorderLayout.NORTH);
 		// 提取现有数据
@@ -129,7 +146,7 @@ public class FrmProductOrderManager extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == this.btnAdd) {
-			FrmProductOrderManager_Add dlg = new FrmProductOrderManager_Add(this, "添加订单", true, productMap_name);
+			FrmProductOrderManager_Add dlg = new FrmProductOrderManager_Add(this, "添加订单", true, productMap_id,cusMap_id);
 			dlg.setVisible(true);
 			if (dlg.getProductOrder() != null) {// 刷新表格
 				this.reloadTable();
@@ -141,7 +158,8 @@ public class FrmProductOrderManager extends JDialog implements ActionListener {
 				return;
 			}
 			BeanProductOrder b = this.bpo.get(i);
-			FrmProductOrderManager_Modify dlg = new FrmProductOrderManager_Modify(this, "修改订单", true, productMap_name, b);
+			FrmProductOrderManager_Modify dlg = new FrmProductOrderManager_Modify(this, "修改订单", true, productMap_id,
+					b);
 			dlg.setVisible(true);
 			if (dlg.getProductOrder() != null) {// 刷新表格
 				this.reloadTable();

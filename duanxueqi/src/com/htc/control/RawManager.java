@@ -19,10 +19,10 @@ public class RawManager {
 
 	public void deleteRaw(BeanRaw r, boolean d) throws BaseException {
 		int flag1 = 0, flag2 = 0;
-		if(new RawStockDAO().qryRawStock(r.getRawID())!=null){
+		if (new RawStockDAO().qryRawStock(r.getRawID()) != null) {
 			throw new BaseException("该原料还有库存");
 		}
-		if(!new ProductDetailDAO().searchProductDetail(r.getRawID()).isEmpty()){
+		if (!new ProductDetailDAO().searchProductDetail(r.getRawID()).isEmpty()) {
 			throw new BaseException("该原料有需求的产品");
 		}
 		if (!new RawOrderDAO().qryRawOrder(r.getRawID()).isEmpty()) {
@@ -45,38 +45,41 @@ public class RawManager {
 				}
 			}
 			new RawDAO().deleteRaw(r.getRawID());
-		}
-		else if(flag1 == 0 && flag2 == 0){
+		} else if (flag1 == 0 && flag2 == 0) {
 			new RawDAO().deleteRaw(r.getRawID());
-		}
-		else{
+		} else {
 			throw new BaseException("该原材料还有订单或出入库记录");
 		}
 	}
-	public void modifyRaw(BeanRaw r) throws BaseException{
-		if(new RawDAO().getRaw(r.getRawID())==null){
+
+	public void modifyRaw(BeanRaw r) throws BaseException {
+		if (new RawDAO().getRaw(r.getRawID()) == null) {
 			throw new BaseException("不存在的原材料");
 		}
 		new RawDAO().modifyRaw(r);
 	}
-	public List<BeanRaw> loadAllRaw() throws BaseException{
+
+	public List<BeanRaw> loadAllRaw() throws BaseException {
 		return new RawDAO().qryRaw("");
 	}
-	public List<BeanRaw> searchByName(String rawName) throws BaseException{
+
+	public List<BeanRaw> searchByName(String rawName) throws BaseException {
 		return new RawDAO().qryRaw(rawName);
 	}
-	public List<BeanRaw> searchByPrice(double up,double down) throws BaseException{
+
+	public List<BeanRaw> searchByPrice(double up, double down) throws BaseException {
 		return new RawDAO().searchByPrice(up, down);
 	}
-	public BeanRaw searchByID(int rawID) throws BaseException{
-		if(new RawDAO().getRaw(rawID)==null){
+
+	public BeanRaw searchByID(int rawID) throws BaseException {
+		if (new RawDAO().getRaw(rawID) == null) {
 			throw new BaseException("该ID不存在");
-		}
-		else{
+		} else {
 			return new RawDAO().getRaw(rawID);
 		}
 	}
-	public List<BeanRaw> serchBySupplier(int supplierID) throws BaseException{
+
+	public List<BeanRaw> serchBySupplier(int supplierID) throws BaseException {
 		return new RawDAO().supplierRaw(supplierID);
 	}
 }

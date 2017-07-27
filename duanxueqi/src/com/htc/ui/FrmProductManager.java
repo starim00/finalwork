@@ -7,6 +7,8 @@ import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.HashMap;
@@ -122,6 +124,23 @@ public class FrmProductManager extends JDialog implements ActionListener {
 				// System.exit(0);
 			}
 		});
+		this.dataTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int i = FrmProductManager.this.dataTable.getSelectedRow();
+				if (i < 0) {
+					return;
+				}
+				FrmProductManager.this.loadInfo(FrmProductManager.this.bp.get(i));
+			}
+
+		});
+	}
+
+	protected void loadInfo(BeanProduct beanProduct) {
+		// TODO Auto-generated method stub
+		FrmProductManager_info dlg = new FrmProductManager_info(this, "添加供货商", true,beanProduct);
+		dlg.setVisible(true);
 	}
 
 	@Override
@@ -154,13 +173,12 @@ public class FrmProductManager extends JDialog implements ActionListener {
 				return;
 			}
 			BeanProduct bpt = this.bp.get(i);
-			FrmProductManager_Del dlg = new FrmProductManager_Del(this, "删除产品", true,bpt);
+			FrmProductManager_Del dlg = new FrmProductManager_Del(this, "删除产品", true, bpt);
 			dlg.setVisible(true);
 			if (dlg.getProduct() != null) {// 刷新表格
 				this.reloadTable();
 			}
-		}
-		else if (e.getSource() == this.btnSearch) {
+		} else if (e.getSource() == this.btnSearch) {
 			this.reloadTable();
 		}
 	}

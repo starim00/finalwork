@@ -14,6 +14,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.htc.control.RawManager;
@@ -36,14 +37,14 @@ public class FrmRawManager_Modify extends JDialog implements ActionListener {
 	private JTextField edtName = new JTextField(20);
 	private JTextField edtPrice = new JTextField(20);
 	private JTextField edtSupplierID = new JTextField(20);
-	private TextArea edtInt = new TextArea(3,35);
+	private JTextArea edtInt = new JTextArea(3, 35);
 
 	private JPanel namePane = new JPanel();
 	private JPanel pricePane = new JPanel();
 	private JPanel supplierPane = new JPanel();
 	private JPanel IntPane = new JPanel();
-	
-	public FrmRawManager_Modify(JDialog f, String s, boolean b ,BeanRaw r) {
+
+	public FrmRawManager_Modify(JDialog f, String s, boolean b, BeanRaw r) {
 		super(f, s, b);
 		toolBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		toolBar.add(btnOk);
@@ -53,6 +54,7 @@ public class FrmRawManager_Modify extends JDialog implements ActionListener {
 		edtName.setText(r.getRawName());
 		edtPrice.setText(Double.toString(r.getPrice()));
 		edtSupplierID.setText(Integer.toString(r.getSupplier()));
+		edtInt.setLineWrap(true);
 		edtInt.setText(r.getIntroduction());
 		namePane.add(labelName);
 		namePane.add(edtName);
@@ -62,10 +64,10 @@ public class FrmRawManager_Modify extends JDialog implements ActionListener {
 		supplierPane.add(edtSupplierID);
 		IntPane.add(labelInt);
 		IntPane.add(edtInt);
-		namePane.setSize(250,100);
-		pricePane.setSize(250,100);
-		supplierPane.setSize(250,100);
-		IntPane.setSize(250,100);
+		namePane.setSize(250, 100);
+		pricePane.setSize(250, 100);
+		supplierPane.setSize(250, 100);
+		IntPane.setSize(250, 100);
 		workPane.setLayout(new BoxLayout(workPane, BoxLayout.Y_AXIS));
 		workPane.add(namePane);
 		workPane.add(pricePane);
@@ -76,7 +78,7 @@ public class FrmRawManager_Modify extends JDialog implements ActionListener {
 		supplierPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		IntPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.getContentPane().add(workPane, BorderLayout.CENTER);
-		this.setSize(350,250);
+		this.setSize(350, 250);
 		// ∆¡ƒªæ”÷–œ‘ æ
 		double width = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		double height = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
@@ -90,13 +92,12 @@ public class FrmRawManager_Modify extends JDialog implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource()==this.btnCancel) {
+		if (e.getSource() == this.btnCancel) {
 			this.setVisible(false);
 			return;
-		}
-		else if(e.getSource()==this.btnOk){
-			
-			br=new BeanRaw();
+		} else if (e.getSource() == this.btnOk) {
+
+			br = new BeanRaw();
 			br.setRawID(rawID);
 			br.setRawName(edtName.getText());
 			br.setPrice(Double.parseDouble(edtPrice.getText()));
@@ -107,11 +108,12 @@ public class FrmRawManager_Modify extends JDialog implements ActionListener {
 				rm.modifyRaw(br);
 				this.setVisible(false);
 			} catch (BaseException e1) {
-				this.br=null;
-				JOptionPane.showMessageDialog(null, e1.getMessage(),"¥ÌŒÛ",JOptionPane.ERROR_MESSAGE);
+				this.br = null;
+				JOptionPane.showMessageDialog(null, e1.getMessage(), "¥ÌŒÛ", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
+
 	public BeanRaw getRaw() {
 		return br;
 	}

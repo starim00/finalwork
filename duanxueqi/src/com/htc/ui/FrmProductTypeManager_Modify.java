@@ -14,6 +14,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.htc.control.ProductTypeManager;
@@ -32,7 +33,7 @@ public class FrmProductTypeManager_Modify extends JDialog implements ActionListe
 	private JLabel labelInt = new JLabel("¡¡¼ò½é:");
 
 	private JTextField edtName = new JTextField(20);
-	private TextArea edtInt = new TextArea(3, 35);
+	private JTextArea edtInt = new JTextArea(3, 35);
 
 	private JPanel namePane = new JPanel();
 	private JPanel IntPane = new JPanel();
@@ -43,6 +44,7 @@ public class FrmProductTypeManager_Modify extends JDialog implements ActionListe
 		toolBar.add(btnOk);
 		toolBar.add(btnCancel);
 		this.getContentPane().add(toolBar, BorderLayout.SOUTH);
+		edtInt.setLineWrap(true);
 		edtName.setText(bpt.getProductTypeName());
 		edtInt.setText(bpt.getIntroduction());
 		productTypeID = bpt.getProductTypeID();

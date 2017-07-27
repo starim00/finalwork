@@ -42,7 +42,7 @@ public class ProductDAO implements IProductDAO {
 			Connection conn = DBUtil.getConnection();
 			String sql = "DELETE FROM product WHERE productID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setInt(1,productID);
+			pst.setInt(1, productID);
 			pst.execute();
 			pst.close();
 			conn.close();
@@ -82,9 +82,9 @@ public class ProductDAO implements IProductDAO {
 			Connection conn = DBUtil.getConnection();
 			String sql = "SELECT * FROM product WHERE productName like ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setString(1, "%"+productName+"%");
+			pst.setString(1, "%" + productName + "%");
 			ResultSet rs = pst.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				BeanProduct p = new BeanProduct();
 				p.setProductID(rs.getInt(1));
 				p.setProductName(rs.getString(2));
@@ -114,7 +114,7 @@ public class ProductDAO implements IProductDAO {
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, productID);
 			ResultSet rs = pst.executeQuery();
-			if(rs.next()){
+			if (rs.next()) {
 				p.setProductID(rs.getInt(1));
 				p.setProductName(rs.getString(2));
 				p.setProductPrice(rs.getDouble(3));
@@ -124,8 +124,7 @@ public class ProductDAO implements IProductDAO {
 				pst.close();
 				conn.close();
 				return p;
-			}
-			else{
+			} else {
 				rs.close();
 				pst.close();
 				conn.close();
@@ -148,7 +147,7 @@ public class ProductDAO implements IProductDAO {
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, productTypeID);
 			ResultSet rs = pst.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				BeanProduct p = new BeanProduct();
 				p.setProductID(rs.getInt(1));
 				p.setProductName(rs.getString(2));
@@ -174,12 +173,12 @@ public class ProductDAO implements IProductDAO {
 		ArrayList<BeanProduct> product = new ArrayList<BeanProduct>();
 		try {
 			Connection conn = DBUtil.getConnection();
-			String sql = "SELECT * FROM product WHERE price BETWEEN ? AND ?";
+			String sql = "SELECT * FROM product WHERE productPrice BETWEEN ? AND ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setDouble(1, down);
 			pst.setDouble(2, up);
 			ResultSet rs = pst.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				BeanProduct p = new BeanProduct();
 				p.setProductID(rs.getInt(1));
 				p.setProductName(rs.getString(2));
@@ -206,14 +205,14 @@ public class ProductDAO implements IProductDAO {
 		try {
 			Connection conn = DBUtil.getConnection();
 			String sql = "SELECT * FROM product WHERE productName like ?";
-			if(productTypeID>0)
-				sql+="AND productTypeID = ?";
+			if (productTypeID > 0)
+				sql += "AND productTypeID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setString(1, "%"+productName+"%");
-			if(productTypeID>0)
+			pst.setString(1, "%" + productName + "%");
+			if (productTypeID > 0)
 				pst.setInt(2, productTypeID);
 			ResultSet rs = pst.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				BeanProduct p = new BeanProduct();
 				p.setProductID(rs.getInt(1));
 				p.setProductName(rs.getString(2));
@@ -232,6 +231,5 @@ public class ProductDAO implements IProductDAO {
 			throw new DbException(e);
 		}
 	}
-	
 
 }

@@ -8,7 +8,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-
 public class FrmMain extends JFrame implements ActionListener {
 	private JMenuBar menubar = new JMenuBar();;
 	private JMenu menu_Produce = new JMenu("产品管理");
@@ -23,7 +22,8 @@ public class FrmMain extends JFrame implements ActionListener {
 	private JMenuItem menuItem_RawOrder = new JMenuItem("原材料订单");
 	private JMenuItem menuItem_ProductOrder = new JMenuItem("产品订单");
 	private JMenuItem menuItem_Produce = new JMenuItem("生产");
-	private JMenuItem menuItem_Storage = new JMenuItem("出入库记录");
+	private JMenuItem menuItem_ProductStorage = new JMenuItem("产品出入库记录");
+	private JMenuItem menuItem_RawStorage = new JMenuItem("原材料出入库记录");
 
 	public FrmMain() {
 		this.setExtendedState(Frame.MAXIMIZED_BOTH);
@@ -47,8 +47,10 @@ public class FrmMain extends JFrame implements ActionListener {
 		menuItem_ProductOrder.addActionListener(this);
 		menu_Stock.add(menuItem_Produce);
 		menuItem_Produce.addActionListener(this);
-		menu_Stock.add(menuItem_Storage);
-		menuItem_Storage.addActionListener(this);
+		menu_Stock.add(menuItem_RawStorage);
+		menuItem_RawStorage.addActionListener(this);
+		menu_Stock.add(menuItem_ProductStorage);
+		menuItem_ProductStorage.addActionListener(this);
 		menubar.add(menu_Stock);
 		this.setJMenuBar(menubar);
 		this.setVisible(true);
@@ -57,40 +59,38 @@ public class FrmMain extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getSource()==this.menuItem_SupplierManager){
-			FrmSupplierManager dlg=new FrmSupplierManager(this,"用户管理",true);
+		if (e.getSource() == this.menuItem_SupplierManager) {
+			FrmSupplierManager dlg = new FrmSupplierManager(this, "用户管理", true);
 			dlg.setVisible(true);
-		}
-		else if(e.getSource()==this.menuItem_RawManager){
-			FrmRawManager dlg=new FrmRawManager(this,"原材料管理",true);
+		} else if (e.getSource() == this.menuItem_RawManager) {
+			FrmRawManager dlg = new FrmRawManager(this, "原材料管理", true);
 			dlg.setVisible(true);
-		}
-		else if(e.getSource()==this.menuItem_ProductTypeManager){
+		} else if (e.getSource() == this.menuItem_ProductTypeManager) {
 			FrmProductTypeManager dlg = new FrmProductTypeManager(this, "产品类别管理", true);
 			dlg.setVisible(true);
-		}
-		else if(e.getSource()==this.menuItem_ProductManager){
+		} else if (e.getSource() == this.menuItem_ProductManager) {
 			FrmProductManager dlg = new FrmProductManager(this, "产品管理", true);
 			dlg.setVisible(true);
-		}
-		else if(e.getSource()==this.menuItem_CustomerManager){
+		} else if (e.getSource() == this.menuItem_CustomerManager) {
 			FrmCustomerManager dlg = new FrmCustomerManager(this, "客户管理", true);
 			dlg.setVisible(true);
-		}
-		else if(e.getSource()==this.menuItem_ProductDetail){
+		} else if (e.getSource() == this.menuItem_ProductDetail) {
 			FrmProductDetailManager dlg = new FrmProductDetailManager(this, "产品明细", true);
 			dlg.setVisible(true);
-		}
-		else if(e.getSource()==this.menuItem_RawOrder){
+		} else if (e.getSource() == this.menuItem_RawOrder) {
 			FrmRawOrderManager dlg = new FrmRawOrderManager(this, "原材料订单", true);
 			dlg.setVisible(true);
-		}
-		else if(e.getSource()==this.menuItem_ProductOrder){
+		} else if (e.getSource() == this.menuItem_ProductOrder) {
 			FrmProductOrderManager dlg = new FrmProductOrderManager(this, "产品订单", true);
 			dlg.setVisible(true);
-		}
-		else if(e.getSource()==this.menuItem_Produce){
+		} else if (e.getSource() == this.menuItem_Produce) {
 			FrmProduceManager dlg = new FrmProduceManager(this, "生产管理", true);
+			dlg.setVisible(true);
+		} else if (e.getSource() == this.menuItem_RawStorage) {
+			FrmRawStorageManager dlg = new FrmRawStorageManager(this, "原材料出入库记录", true);
+			dlg.setVisible(true);
+		} else if (e.getSource() == this.menuItem_ProductStorage) {
+			FrmProductStorageManager dlg = new FrmProductStorageManager(this, "产品出入库记录", true);
 			dlg.setVisible(true);
 		}
 	}

@@ -23,7 +23,7 @@ public class ProductStorageDAO implements IProductStorageDAO {
 			String sql = "INSERT INTO productstorage(productID,productOrderID,date,storageQuantity) values (?,?,?,?)";
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, d.getProductID());
-			pst.setInt(2,d.getProductOrderID());
+			pst.setInt(2, d.getProductOrderID());
 			pst.setLong(3, d.getDate().getTime());
 			pst.setInt(4, d.getStorageQuantity());
 			pst.execute();
@@ -43,7 +43,7 @@ public class ProductStorageDAO implements IProductStorageDAO {
 			Connection conn = DBUtil.getConnection();
 			String sql = "DELETE FROM productstorage WHERE productStorageID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setInt(1,productStorageID);
+			pst.setInt(1, productStorageID);
 			pst.execute();
 			pst.close();
 			conn.close();
@@ -82,11 +82,14 @@ public class ProductStorageDAO implements IProductStorageDAO {
 		ArrayList<BeanProductStorage> product = new ArrayList<BeanProductStorage>();
 		try {
 			Connection conn = DBUtil.getConnection();
-			String sql = "SELECT * FROM productstorage WHERE productID = ?";
+			String sql = "SELECT * FROM productstorage";
+			if (productID != 0)
+				sql += " WHERE productID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setInt(1, productID);
+			if (productID != 0)
+				pst.setInt(1, productID);
 			ResultSet rs = pst.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				BeanProductStorage p = new BeanProductStorage();
 				p.setProductStorageID(rs.getInt(1));
 				p.setProductID(rs.getInt(2));
@@ -116,7 +119,7 @@ public class ProductStorageDAO implements IProductStorageDAO {
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, productStorageID);
 			ResultSet rs = pst.executeQuery();
-			if(rs.next()){
+			if (rs.next()) {
 				p.setProductStorageID(rs.getInt(1));
 				p.setProductID(rs.getInt(2));
 				p.setProductOrderID(rs.getInt(3));
@@ -126,8 +129,7 @@ public class ProductStorageDAO implements IProductStorageDAO {
 				pst.close();
 				conn.close();
 				return p;
-			}
-			else{
+			} else {
 				rs.close();
 				pst.close();
 				conn.close();
@@ -150,7 +152,7 @@ public class ProductStorageDAO implements IProductStorageDAO {
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, productOrderID);
 			ResultSet rs = pst.executeQuery();
-			if(rs.next()){
+			if (rs.next()) {
 				p.setProductStorageID(rs.getInt(1));
 				p.setProductID(rs.getInt(2));
 				p.setProductOrderID(rs.getInt(3));
@@ -160,8 +162,7 @@ public class ProductStorageDAO implements IProductStorageDAO {
 				pst.close();
 				conn.close();
 				return p;
-			}
-			else{
+			} else {
 				rs.close();
 				pst.close();
 				conn.close();

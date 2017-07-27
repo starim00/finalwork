@@ -39,7 +39,7 @@ public class ProductStockDAO implements IProductStockDAO {
 			Connection conn = DBUtil.getConnection();
 			String sql = "DELETE FROM productstock WHERE productStockID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setInt(1,productStockID);
+			pst.setInt(1, productStockID);
 			pst.execute();
 			pst.close();
 			conn.close();
@@ -79,7 +79,7 @@ public class ProductStockDAO implements IProductStockDAO {
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, productID);
 			ResultSet rs = pst.executeQuery();
-			if(rs.next()){
+			if (rs.next()) {
 				BeanProductStock p = new BeanProductStock();
 				p.setProductStockID(rs.getInt(1));
 				p.setProductID(rs.getInt(2));
@@ -89,8 +89,7 @@ public class ProductStockDAO implements IProductStockDAO {
 				pst.close();
 				conn.close();
 				return p;
-			}
-			else{
+			} else {
 				rs.close();
 				pst.close();
 				conn.close();
@@ -112,7 +111,7 @@ public class ProductStockDAO implements IProductStockDAO {
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, productStockID);
 			ResultSet rs = pst.executeQuery();
-			if(rs.next()){
+			if (rs.next()) {
 				p.setProductStockID(rs.getInt(1));
 				p.setProductID(rs.getInt(2));
 				p.setStockAddress(rs.getString(3));
@@ -121,8 +120,7 @@ public class ProductStockDAO implements IProductStockDAO {
 				pst.close();
 				conn.close();
 				return p;
-			}
-			else{
+			} else {
 				rs.close();
 				pst.close();
 				conn.close();

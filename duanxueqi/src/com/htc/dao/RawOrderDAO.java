@@ -40,7 +40,7 @@ public class RawOrderDAO implements IRawOrderDAO {
 			Connection conn = DBUtil.getConnection();
 			String sql = "DELETE FROM raworder WHERE rawOrderID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setInt(1,rawOrderID);
+			pst.setInt(1, rawOrderID);
 			pst.execute();
 			pst.close();
 			conn.close();
@@ -79,13 +79,13 @@ public class RawOrderDAO implements IRawOrderDAO {
 		try {
 			Connection conn = DBUtil.getConnection();
 			String sql = "SELECT * FROM raworder";
-			if(rawID!=0)
-				sql+=" WHERE rawID = ?";
+			if (rawID != 0)
+				sql += " WHERE rawID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			if(rawID!=0)
+			if (rawID != 0)
 				pst.setInt(1, rawID);
 			ResultSet rs = pst.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				BeanRawOrder p = new BeanRawOrder();
 				p.setRawOrderID(rs.getInt(1));
 				p.setRawID(rs.getInt(2));
@@ -114,7 +114,7 @@ public class RawOrderDAO implements IRawOrderDAO {
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, rawOrderID);
 			ResultSet rs = pst.executeQuery();
-			if(rs.next()){
+			if (rs.next()) {
 				p.setRawOrderID(rs.getInt(1));
 				p.setRawID(rs.getInt(2));
 				p.setQuantity(rs.getInt(3));
@@ -123,8 +123,7 @@ public class RawOrderDAO implements IRawOrderDAO {
 				pst.close();
 				conn.close();
 				return p;
-			}
-			else{
+			} else {
 				rs.close();
 				pst.close();
 				conn.close();

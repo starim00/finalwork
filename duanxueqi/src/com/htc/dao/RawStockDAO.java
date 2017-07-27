@@ -39,7 +39,7 @@ public class RawStockDAO implements IRawStockDAO {
 			Connection conn = DBUtil.getConnection();
 			String sql = "DELETE FROM rawstock WHERE rawStockID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setInt(1,rawStockID);
+			pst.setInt(1, rawStockID);
 			pst.execute();
 			pst.close();
 			conn.close();
@@ -80,7 +80,7 @@ public class RawStockDAO implements IRawStockDAO {
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, rawID);
 			ResultSet rs = pst.executeQuery();
-			if(rs.next()){
+			if (rs.next()) {
 				BeanRawStock p = new BeanRawStock();
 				p.setRawStockID(rs.getInt(1));
 				p.setRawID(rs.getInt(2));
@@ -90,8 +90,7 @@ public class RawStockDAO implements IRawStockDAO {
 				pst.close();
 				conn.close();
 				return p;
-			}
-			else{
+			} else {
 				rs.close();
 				pst.close();
 				conn.close();
@@ -114,7 +113,7 @@ public class RawStockDAO implements IRawStockDAO {
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, rawStockID);
 			ResultSet rs = pst.executeQuery();
-			if(rs.next()){
+			if (rs.next()) {
 				p.setRawStockID(rs.getInt(1));
 				p.setRawID(rs.getInt(2));
 				p.setStockAddress(rs.getString(3));
@@ -123,8 +122,7 @@ public class RawStockDAO implements IRawStockDAO {
 				pst.close();
 				conn.close();
 				return p;
-			}
-			else{
+			} else {
 				rs.close();
 				pst.close();
 				conn.close();

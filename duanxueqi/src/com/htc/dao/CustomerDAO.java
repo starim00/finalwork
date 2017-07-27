@@ -12,7 +12,7 @@ import com.htc.util.BaseException;
 import com.htc.util.DBUtil;
 import com.htc.util.DbException;
 
-public class CustomerDAO implements ICustomerDAO{
+public class CustomerDAO implements ICustomerDAO {
 
 	@Override
 	public void createCustomer(BeanCustomer c) throws BaseException {
@@ -41,7 +41,7 @@ public class CustomerDAO implements ICustomerDAO{
 			Connection conn = DBUtil.getConnection();
 			String sql = "DELETE FROM customer WHERE customerID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setInt(1,customerID);
+			pst.setInt(1, customerID);
 			pst.execute();
 			pst.close();
 			conn.close();
@@ -81,9 +81,9 @@ public class CustomerDAO implements ICustomerDAO{
 			Connection conn = DBUtil.getConnection();
 			String sql = "SELECT * FROM customer WHERE customerName like ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setString(1, "%"+customerName+"%");
+			pst.setString(1, "%" + customerName + "%");
 			ResultSet rs = pst.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				BeanCustomer c = new BeanCustomer();
 				c.setCustomerID(rs.getInt(1));
 				c.setCustomerName(rs.getString(2));
@@ -107,12 +107,12 @@ public class CustomerDAO implements ICustomerDAO{
 		// TODO Auto-generated method stub
 		BeanCustomer c = new BeanCustomer();
 		try {
-			Connection conn =DBUtil.getConnection();
+			Connection conn = DBUtil.getConnection();
 			String sql = "SELECT * FROM customer WHERE customerID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, customerID);
 			ResultSet rs = pst.executeQuery();
-			if(rs.next()){
+			if (rs.next()) {
 				c.setCustomerID(rs.getInt(1));
 				c.setCustomerName(rs.getString(2));
 				c.setCustomerAddress(rs.getString(3));
@@ -121,8 +121,7 @@ public class CustomerDAO implements ICustomerDAO{
 				pst.close();
 				conn.close();
 				return c;
-			}
-			else{
+			} else {
 				rs.close();
 				pst.close();
 				conn.close();

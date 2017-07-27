@@ -3,10 +3,10 @@ package com.htc.util;
 import java.sql.Connection;
 
 public class DBUtil {
-	private static final String jdbcUrl="jdbc:mysql://localhost:3306/duanxueqi";
-	private static final String dbUser="root";
-	private static final String dbPwd="";
-	static{
+	private static final String jdbcUrl = "jdbc:mysql://localhost:3306/duanxueqi";
+	private static final String dbUser = "root";
+	private static final String dbPwd = "";
+	static {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
@@ -14,7 +14,8 @@ public class DBUtil {
 			e.printStackTrace();
 		}
 	}
-	public static Connection getConnection() throws java.sql.SQLException{
+
+	public static Connection getConnection() throws java.sql.SQLException {
 		return java.sql.DriverManager.getConnection(jdbcUrl, dbUser, dbPwd);
 	}
 }

@@ -41,7 +41,7 @@ public class ProductOrderDAO implements IProductOrderDAO {
 			Connection conn = DBUtil.getConnection();
 			String sql = "DELETE FROM productorder WHERE productOrderID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setInt(1,productOrderID);
+			pst.setInt(1, productOrderID);
 			pst.execute();
 			pst.close();
 			conn.close();
@@ -80,11 +80,14 @@ public class ProductOrderDAO implements IProductOrderDAO {
 		ArrayList<BeanProductOrder> product = new ArrayList<BeanProductOrder>();
 		try {
 			Connection conn = DBUtil.getConnection();
-			String sql = "SELECT * FROM productorder WHERE productID = ?";
+			String sql = "SELECT * FROM productorder";
+			if(productID!=0)
+				sql+=" WHERE productID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setInt(1, productID);
+			if(productID!=0)
+				pst.setInt(1, productID);
 			ResultSet rs = pst.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				BeanProductOrder p = new BeanProductOrder();
 				p.setProductOrderID(rs.getInt(1));
 				p.setProductID(rs.getInt(2));
@@ -114,7 +117,7 @@ public class ProductOrderDAO implements IProductOrderDAO {
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, productOrderID);
 			ResultSet rs = pst.executeQuery();
-			if(rs.next()){
+			if (rs.next()) {
 				p.setProductOrderID(rs.getInt(1));
 				p.setProductID(rs.getInt(2));
 				p.setCustomerID(rs.getInt(3));
@@ -124,8 +127,7 @@ public class ProductOrderDAO implements IProductOrderDAO {
 				pst.close();
 				conn.close();
 				return p;
-			}
-			else{
+			} else {
 				rs.close();
 				pst.close();
 				conn.close();
@@ -148,7 +150,7 @@ public class ProductOrderDAO implements IProductOrderDAO {
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, customerID);
 			ResultSet rs = pst.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				BeanProductOrder p = new BeanProductOrder();
 				p.setProductOrderID(rs.getInt(1));
 				p.setProductID(rs.getInt(2));

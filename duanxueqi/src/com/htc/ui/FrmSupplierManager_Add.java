@@ -14,6 +14,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.htc.control.SupplierManager;
@@ -37,20 +38,21 @@ public class FrmSupplierManager_Add extends JDialog implements ActionListener {
 	private JTextField edtAddress = new JTextField(20);
 	private JTextField edtContact = new JTextField(20);
 	private JTextField edtTelephone = new JTextField(20);
-	private TextArea edtInt = new TextArea(3,35);
+	private JTextArea edtInt = new JTextArea(5, 15);
 
 	private JPanel namePane = new JPanel();
 	private JPanel AddressPane = new JPanel();
 	private JPanel ContactPane = new JPanel();
 	private JPanel TelPane = new JPanel();
 	private JPanel IntPane = new JPanel();
-	
+
 	public FrmSupplierManager_Add(JDialog f, String s, boolean b) {
 		super(f, s, b);
 		toolBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		toolBar.add(btnOk);
 		toolBar.add(btnCancel);
 		this.getContentPane().add(toolBar, BorderLayout.SOUTH);
+		edtInt.setLineWrap(true);
 		namePane.add(labelName);
 		namePane.add(edtName);
 		AddressPane.add(labelAddress);
@@ -61,11 +63,11 @@ public class FrmSupplierManager_Add extends JDialog implements ActionListener {
 		TelPane.add(edtTelephone);
 		IntPane.add(labelInt);
 		IntPane.add(edtInt);
-		namePane.setSize(250,100);
-		AddressPane.setSize(250,100);
-		ContactPane.setSize(250,100);
-		TelPane.setSize(250,100);
-		IntPane.setSize(250,100);
+		namePane.setSize(250, 100);
+		AddressPane.setSize(250, 100);
+		ContactPane.setSize(250, 100);
+		TelPane.setSize(250, 100);
+		IntPane.setSize(250, 100);
 		workPane.setLayout(new BoxLayout(workPane, BoxLayout.Y_AXIS));
 		workPane.add(namePane);
 		workPane.add(AddressPane);
@@ -78,7 +80,7 @@ public class FrmSupplierManager_Add extends JDialog implements ActionListener {
 		TelPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		IntPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.getContentPane().add(workPane, BorderLayout.CENTER);
-		this.setSize(350,300);
+		this.setSize(350, 320);
 		// ∆¡ƒªæ”÷–œ‘ æ
 		double width = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		double height = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
@@ -92,13 +94,12 @@ public class FrmSupplierManager_Add extends JDialog implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource()==this.btnCancel) {
+		if (e.getSource() == this.btnCancel) {
 			this.setVisible(false);
 			return;
-		}
-		else if(e.getSource()==this.btnOk){
-			
-			sup=new BeanSupplier();
+		} else if (e.getSource() == this.btnOk) {
+
+			sup = new BeanSupplier();
 			sup.setSupplierName(edtName.getText());
 			sup.setSupplierAddress(edtAddress.getText());
 			sup.setContactPerson(edtContact.getText());
@@ -109,11 +110,12 @@ public class FrmSupplierManager_Add extends JDialog implements ActionListener {
 				sm.createSupplier(sup);
 				this.setVisible(false);
 			} catch (BaseException e1) {
-				this.sup=null;
-				JOptionPane.showMessageDialog(null, e1.getMessage(),"¥ÌŒÛ",JOptionPane.ERROR_MESSAGE);
+				this.sup = null;
+				JOptionPane.showMessageDialog(null, e1.getMessage(), "¥ÌŒÛ", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
+
 	public BeanSupplier getSup() {
 		return sup;
 	}

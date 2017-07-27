@@ -42,7 +42,7 @@ public class RawDAO implements IRawDAO {
 			Connection conn = DBUtil.getConnection();
 			String sql = "DELETE FROM raw WHERE rawID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setInt(1,rawID);
+			pst.setInt(1, rawID);
 			pst.execute();
 			pst.close();
 			conn.close();
@@ -83,9 +83,9 @@ public class RawDAO implements IRawDAO {
 			Connection conn = DBUtil.getConnection();
 			String sql = "SELECT * FROM raw WHERE rawName like ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setString(1, "%"+rawName+"%");
+			pst.setString(1, "%" + rawName + "%");
 			ResultSet rs = pst.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				BeanRaw p = new BeanRaw();
 				p.setRawID(rs.getInt(1));
 				p.setRawName(rs.getString(2));
@@ -115,7 +115,7 @@ public class RawDAO implements IRawDAO {
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, rawID);
 			ResultSet rs = pst.executeQuery();
-			if(rs.next()){
+			if (rs.next()) {
 				p.setRawID(rs.getInt(1));
 				p.setRawName(rs.getString(2));
 				p.setPrice(rs.getDouble(3));
@@ -125,8 +125,7 @@ public class RawDAO implements IRawDAO {
 				pst.close();
 				conn.close();
 				return p;
-			}
-			else{
+			} else {
 				rs.close();
 				pst.close();
 				conn.close();
@@ -149,7 +148,7 @@ public class RawDAO implements IRawDAO {
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, supplierID);
 			ResultSet rs = pst.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				BeanRaw p = new BeanRaw();
 				p.setRawID(rs.getInt(1));
 				p.setRawName(rs.getString(2));
@@ -180,7 +179,7 @@ public class RawDAO implements IRawDAO {
 			pst.setDouble(1, down);
 			pst.setDouble(2, up);
 			ResultSet rs = pst.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				BeanRaw p = new BeanRaw();
 				p.setRawID(rs.getInt(1));
 				p.setRawName(rs.getString(2));

@@ -23,7 +23,7 @@ public class ProduceDAO implements IProduceDAO {
 			String sql = "INSERT INTO produce(productID,date,quantity) values (?,?,?)";
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, p.getProductID());
-			pst.setLong(2,p.getDate().getTime());
+			pst.setLong(2, p.getDate().getTime());
 			pst.setInt(3, p.getQuantity());
 			pst.execute();
 			pst.close();
@@ -44,7 +44,7 @@ public class ProduceDAO implements IProduceDAO {
 			String sql = "SELECT * FROM produce";
 			PreparedStatement pst = conn.prepareStatement(sql);
 			ResultSet rs = pst.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				BeanProduce p = new BeanProduce();
 				p.setProduceID(rs.getInt(1));
 				p.setProductID(rs.getInt(2));
@@ -73,7 +73,7 @@ public class ProduceDAO implements IProduceDAO {
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, productID);
 			ResultSet rs = pst.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				BeanProduce p = new BeanProduce();
 				p.setProduceID(rs.getInt(1));
 				p.setProductID(rs.getInt(2));
@@ -103,7 +103,7 @@ public class ProduceDAO implements IProduceDAO {
 			pst.setLong(1, down);
 			pst.setLong(2, up);
 			ResultSet rs = pst.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				BeanProduce p = new BeanProduce();
 				p.setProduceID(rs.getInt(1));
 				p.setProductID(rs.getInt(2));
@@ -134,7 +134,7 @@ public class ProduceDAO implements IProduceDAO {
 			pst.setLong(2, up);
 			pst.setInt(3, productID);
 			ResultSet rs = pst.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				BeanProduce p = new BeanProduce();
 				p.setProduceID(rs.getInt(1));
 				p.setProductID(rs.getInt(2));

@@ -48,20 +48,19 @@ public class StockManager {
 		return new RawStockDAO().qryRawStock(rawID);
 	}
 
-	public List<BeanRawStock> searchBySupplier(int supplierID) throws BaseException{
+	public List<BeanRawStock> searchBySupplier(int supplierID) throws BaseException {
 		List<BeanRaw> br = new RawDAO().supplierRaw(supplierID);
-		if(br.isEmpty()){
+		if (br.isEmpty()) {
 			throw new BaseException("该供应商没有供应原材料");
-		}
-		else{
+		} else {
 			ArrayList<BeanRawStock> brs = new ArrayList<BeanRawStock>();
-			for(int i = 0;i<br.size();i++){
+			for (int i = 0; i < br.size(); i++) {
 				brs.add(new RawStockDAO().qryRawStock(br.get(i).getRawID()));
 			}
 			return brs;
 		}
 	}
-	
+
 	public void createProductStock(BeanProductStock s) throws BaseException {
 		new ProductStockDAO().createProductStock(s);
 	}

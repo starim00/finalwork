@@ -42,7 +42,7 @@ public class RawStorageDAO implements IRawStorageDAO {
 			Connection conn = DBUtil.getConnection();
 			String sql = "DELETE FROM rawstorage WHERE rawStorageID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setInt(1,rawStorageID);
+			pst.setInt(1, rawStorageID);
 			pst.execute();
 			pst.close();
 			conn.close();
@@ -80,11 +80,14 @@ public class RawStorageDAO implements IRawStorageDAO {
 		ArrayList<BeanRawStorage> raw = new ArrayList<BeanRawStorage>();
 		try {
 			Connection conn = DBUtil.getConnection();
-			String sql = "SELECT * FROM rawstorage WHERE rawID = ?";
+			String sql = "SELECT * FROM rawstorage";
+			if (rawID != 0)
+				sql += " WHERE rawID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setInt(1, rawID);
+			if (rawID != 0)
+				pst.setInt(1, rawID);
 			ResultSet rs = pst.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				BeanRawStorage r = new BeanRawStorage();
 				r.setRawStorageID(rs.getInt(1));
 				r.setRawID(rs.getInt(2));
@@ -113,7 +116,7 @@ public class RawStorageDAO implements IRawStorageDAO {
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, rawStorageID);
 			ResultSet rs = pst.executeQuery();
-			if(rs.next()){
+			if (rs.next()) {
 				p.setRawStorageID(rs.getInt(1));
 				p.setRawID(rs.getInt(2));
 				p.setData(new Date(rs.getLong(3)));
@@ -122,8 +125,7 @@ public class RawStorageDAO implements IRawStorageDAO {
 				pst.close();
 				conn.close();
 				return p;
-			}
-			else{
+			} else {
 				rs.close();
 				pst.close();
 				conn.close();

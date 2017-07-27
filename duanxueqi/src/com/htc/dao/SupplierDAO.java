@@ -43,7 +43,7 @@ public class SupplierDAO implements ISupplierDAO {
 			Connection conn = DBUtil.getConnection();
 			String sql = "DELETE FROM supplier WHERE supplierID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setInt(1,supplierID);
+			pst.setInt(1, supplierID);
 			pst.execute();
 			pst.close();
 			conn.close();
@@ -85,9 +85,9 @@ public class SupplierDAO implements ISupplierDAO {
 			Connection conn = DBUtil.getConnection();
 			String sql = "SELECT * FROM supplier WHERE supplierName like ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
-			pst.setString(1, "%"+supplierName+"%");
+			pst.setString(1, "%" + supplierName + "%");
 			ResultSet rs = pst.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				BeanSupplier c = new BeanSupplier();
 				c.setSupplierID(rs.getInt(1));
 				c.setSupplierName(rs.getString(2));
@@ -113,12 +113,12 @@ public class SupplierDAO implements ISupplierDAO {
 		// TODO Auto-generated method stub
 		BeanSupplier c = new BeanSupplier();
 		try {
-			Connection conn =DBUtil.getConnection();
+			Connection conn = DBUtil.getConnection();
 			String sql = "SELECT * FROM supplier WHERE supplierID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
 			pst.setInt(1, supplierID);
 			ResultSet rs = pst.executeQuery();
-			if(rs.next()){
+			if (rs.next()) {
 				c.setSupplierID(rs.getInt(1));
 				c.setSupplierName(rs.getString(2));
 				c.setSupplierAddress(rs.getString(3));
@@ -129,8 +129,7 @@ public class SupplierDAO implements ISupplierDAO {
 				pst.close();
 				conn.close();
 				return c;
-			}
-			else{
+			} else {
 				rs.close();
 				pst.close();
 				conn.close();
