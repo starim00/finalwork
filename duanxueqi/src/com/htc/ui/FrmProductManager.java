@@ -128,7 +128,7 @@ public class FrmProductManager extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == this.btnAdd) {
-			FrmProductManager_Add dlg = new FrmProductManager_Add(this, "添加产品类别", true, this.productTypeMap_name);
+			FrmProductManager_Add dlg = new FrmProductManager_Add(this, "添加产品", true, this.productTypeMap_name);
 			dlg.setVisible(true);
 			if (dlg.getProduct() != null) {// 刷新表格
 				this.reloadTable();
@@ -136,7 +136,7 @@ public class FrmProductManager extends JDialog implements ActionListener {
 		} else if (e.getSource() == this.btnModify) {
 			int i = this.dataTable.getSelectedRow();
 			if (i < 0) {
-				JOptionPane.showMessageDialog(null, "请选择产品类别", "提示", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "请选择产品", "提示", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			BeanProduct bpt = this.bp.get(i);
@@ -150,11 +150,11 @@ public class FrmProductManager extends JDialog implements ActionListener {
 		} else if (e.getSource() == this.btnDelete) {
 			int i = this.dataTable.getSelectedRow();
 			if (i < 0) {
-				JOptionPane.showMessageDialog(null, "请选择产品类别", "提示", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "请选择产品", "提示", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			BeanProduct bpt = this.bp.get(i);
-			FrmProductManager_Del dlg = new FrmProductManager_Del(this, "修改产品", true,bpt);
+			FrmProductManager_Del dlg = new FrmProductManager_Del(this, "删除产品", true,bpt);
 			dlg.setVisible(true);
 			if (dlg.getProduct() != null) {// 刷新表格
 				this.reloadTable();

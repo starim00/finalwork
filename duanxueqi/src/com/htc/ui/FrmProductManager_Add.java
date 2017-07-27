@@ -8,6 +8,7 @@ import java.awt.TextArea;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.BoxLayout;
@@ -19,12 +20,15 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.htc.control.ProductManager;
+import com.htc.control.StockManager;
 import com.htc.model.BeanProduct;
+import com.htc.model.BeanProductStock;
 import com.htc.model.BeanProductType;
 import com.htc.util.BaseException;
 
 public class FrmProductManager_Add extends JDialog implements ActionListener {
 	private BeanProduct bp = null;
+	private BeanProductStock bs =null;
 
 	private JPanel toolBar = new JPanel();
 	private JPanel workPane = new JPanel();
@@ -34,7 +38,7 @@ public class FrmProductManager_Add extends JDialog implements ActionListener {
 	private JLabel labelPrice = new JLabel(" 产品价格:");
 	private JLabel labelProductTypeID = new JLabel(" 产品类型");
 	private JLabel labelInt = new JLabel("　 简介:");
-	private JLabel labelStock = new JLabel(" 库存地址");
+	private JLabel labelStock = new JLabel(" 库存地址:");
 	
 	private JTextField edtName = new JTextField(20);
 	private JTextField edtPrice = new JTextField(20);
@@ -89,9 +93,10 @@ public class FrmProductManager_Add extends JDialog implements ActionListener {
 		namePane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		pricePane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		productTypePane.setAlignmentX(Component.LEFT_ALIGNMENT);
+		stockPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		IntPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.getContentPane().add(workPane, BorderLayout.CENTER);
-		this.setSize(350,250);
+		this.setSize(350,300);
 		// 屏幕居中显示
 		double width = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		double height = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
@@ -111,6 +116,7 @@ public class FrmProductManager_Add extends JDialog implements ActionListener {
 		}
 		else if(e.getSource()==this.btnOk){
 			bp=new BeanProduct();
+			bs=new BeanProductStock();
 			bp.setProductName(edtName.getText());
 			bp.setProductPrice(Double.parseDouble(edtPrice.getText()));
 			String ptName=this.cmbProducttype.getSelectedItem().toString();
@@ -119,10 +125,15 @@ public class FrmProductManager_Add extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(null, "请选择产品类别","错误",JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			bp.setProductTypeID(bpt.getProductTypeID());;
+			bp.setProductTypeID(bpt.getProductTypeID());
 			try {
 				ProductManager pm = new ProductManager();
 				pm.createProduct(bp);
+				List<BeanProduct> l = pm.loadAllProduct();
+				bs.setProductID(l.get(l.size()-1).getProductID());
+				bs.setStockAddress(edtStock.getText());
+				bs.setStockQuantity(0);
+				new StockManager().createProductStock(bs);
 				this.setVisible(false);
 			} catch (BaseException e1) {
 				this.bp=null;

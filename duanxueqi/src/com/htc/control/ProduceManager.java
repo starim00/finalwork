@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.htc.dao.ProduceDAO;
 import com.htc.dao.ProductDAO;
 import com.htc.dao.ProductDetailDAO;
 import com.htc.dao.ProductStockDAO;
 import com.htc.dao.ProductStorageDAO;
 import com.htc.dao.RawStockDAO;
 import com.htc.dao.RawStorageDAO;
+import com.htc.model.BeanProduce;
 import com.htc.model.BeanProduct;
 import com.htc.model.BeanProductDetail;
 import com.htc.model.BeanProductStock;
@@ -42,7 +44,7 @@ public class ProduceManager {
 			for (i = 0; i < r.size(); i++) {
 				BeanRawStorage rs = new BeanRawStorage();
 				rs.setRawID(d.get(i).getRawID());
-				rs.setStorageQuantity(d.get(i).getQuantity() * quantity);
+				rs.setStorageQuantity(-d.get(i).getQuantity() * quantity);
 				rs.setData(new Date(System.currentTimeMillis()));
 				new RawStorageDAO().createRawStorage(rs);
 				r.get(i).setStockQuantity(r.get(i).getStockQuantity() - (d.get(i).getQuantity() * quantity));
@@ -56,6 +58,39 @@ public class ProduceManager {
 			BeanProductStock ps = new ProductStockDAO().qryProductStock(productID);
 			ps.setStockQuantity(ps.getStockQuantity() + quantity);
 			new ProductStockDAO().modifyProductStock(ps);
+			BeanProduce bp = new BeanProduce();
+			bp.setProductID(productID);
+			bp.setQuantity(quantity);
+			bp.setDate(new Date(System.currentTimeMillis()));
+			new ProduceDAO().createProduce(bp);
+		}
+	}
+
+	public List<BeanProduce> loadAllProduce() throws BaseException {
+		return new ProduceDAO().loadAllProduce();
+	}
+
+	public List<BeanProduce> loadByProductID(int productID) throws BaseException {
+		if (new ProductDAO().getProduct(productID) == null) {
+			throw new BaseException("产品不存在");
+		} else {
+			return new ProduceDAO().loadByProduct(productID);
+		}
+	}
+
+	public List<BeanProduce> loadByDate(Date up, Date down) throws BaseException {
+		if (up.getTime() < down.getTime()) {
+			throw new BaseException("时间上限不能小于下限");
+		} else {
+			return new ProduceDAO().loadByDate(up.getTime(), down.getTime());
+		}
+	}
+
+	public List<BeanProduce> loadByDate(Date up, Date down, int productID) throws BaseException {
+		if (up.getTime() < down.getTime()) {
+			throw new BaseException("时间上限不能小于下限");
+		} else {
+			return new ProduceDAO().loadByDate(productID, up.getTime(), down.getTime());
 		}
 	}
 }

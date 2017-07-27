@@ -86,7 +86,11 @@ public class FrmMain extends JFrame implements ActionListener {
 			dlg.setVisible(true);
 		}
 		else if(e.getSource()==this.menuItem_ProductOrder){
-			FrmProductOrderManager dlg = new FrmProductOrderManager(this, "原材料订单", true);
+			FrmProductOrderManager dlg = new FrmProductOrderManager(this, "产品订单", true);
+			dlg.setVisible(true);
+		}
+		else if(e.getSource()==this.menuItem_Produce){
+			FrmProduceManager dlg = new FrmProduceManager(this, "生产管理", true);
 			dlg.setVisible(true);
 		}
 	}

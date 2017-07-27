@@ -2,6 +2,7 @@ package com.htc.control;
 
 import java.util.List;
 
+import com.htc.dao.ProductDetailDAO;
 import com.htc.dao.RawDAO;
 import com.htc.dao.RawOrderDAO;
 import com.htc.dao.RawStockDAO;
@@ -20,6 +21,9 @@ public class RawManager {
 		int flag1 = 0, flag2 = 0;
 		if(new RawStockDAO().qryRawStock(r.getRawID())!=null){
 			throw new BaseException("该原料还有库存");
+		}
+		if(!new ProductDetailDAO().searchProductDetail(r.getRawID()).isEmpty()){
+			throw new BaseException("该原料有需求的产品");
 		}
 		if (!new RawOrderDAO().qryRawOrder(r.getRawID()).isEmpty()) {
 			flag1 = 1;

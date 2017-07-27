@@ -3,6 +3,7 @@ package com.htc.control;
 import java.util.List;
 
 import com.htc.dao.ProductDAO;
+import com.htc.dao.ProductDetailDAO;
 import com.htc.dao.ProductOrderDAO;
 import com.htc.dao.ProductStockDAO;
 import com.htc.dao.ProductStorageDAO;
@@ -41,6 +42,7 @@ public class ProductManager {
 			}
 			new ProductDAO().deleteProduct(p.getProductID());
 		} else if (flag1 == 0 && flag2 == 0) {
+			new ProductDetailDAO().deleteByProductID(p.getProductID());
 			new ProductDAO().deleteProduct(p.getProductID());
 		} else {
 			throw new BaseException("该产品还有订单和出入库记录");

@@ -8,6 +8,7 @@ import java.awt.TextArea;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.BoxLayout;
@@ -19,13 +20,17 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.htc.control.RawManager;
+import com.htc.control.StockManager;
+import com.htc.model.BeanProduct;
 import com.htc.model.BeanProductType;
 import com.htc.model.BeanRaw;
+import com.htc.model.BeanRawStock;
 import com.htc.model.BeanSupplier;
 import com.htc.util.BaseException;
 
 public class FrmRawManager_Add extends JDialog implements ActionListener {
 	private BeanRaw br = null;
+	private BeanRawStock rs = null;
 
 	private JPanel toolBar = new JPanel();
 	private JPanel workPane = new JPanel();
@@ -34,10 +39,12 @@ public class FrmRawManager_Add extends JDialog implements ActionListener {
 	private JLabel labelName = new JLabel("原材料名称:");
 	private JLabel labelPrice = new JLabel("原材料价格:");
 	private JLabel labelSupplierID = new JLabel("供货商ID");
+	private JLabel labelStockAddress = new JLabel("库存地址:");
 	private JLabel labelInt = new JLabel("　简介:");
 
 	private JTextField edtName = new JTextField(20);
 	private JTextField edtPrice = new JTextField(20);
+	private JTextField edtStock = new JTextField(20);
 	private Map<String,BeanSupplier> supMap_name=null;
 	private JComboBox cmbSupplier=null;
 	private TextArea edtInt = new TextArea(3,35);
@@ -45,6 +52,7 @@ public class FrmRawManager_Add extends JDialog implements ActionListener {
 	private JPanel namePane = new JPanel();
 	private JPanel pricePane = new JPanel();
 	private JPanel supplierPane = new JPanel();
+	private JPanel stockPane = new JPanel();
 	private JPanel IntPane = new JPanel();
 	
 	public FrmRawManager_Add(JDialog f, String s, boolean b ,Map<String, BeanSupplier> bsMap) {
@@ -69,20 +77,25 @@ public class FrmRawManager_Add extends JDialog implements ActionListener {
 		}
 		cmbSupplier=new JComboBox(strTypes);
 		supplierPane.add(cmbSupplier);
+		stockPane.add(labelStockAddress);
+		stockPane.add(edtStock);
 		IntPane.add(labelInt);
 		IntPane.add(edtInt);
 		namePane.setSize(250,100);
 		pricePane.setSize(250,100);
 		supplierPane.setSize(250,100);
 		IntPane.setSize(250,100);
+		stockPane.setSize(250,100);
 		workPane.setLayout(new BoxLayout(workPane, BoxLayout.Y_AXIS));
 		workPane.add(namePane);
 		workPane.add(pricePane);
 		workPane.add(supplierPane);
+		workPane.add(stockPane);
 		workPane.add(IntPane);
 		namePane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		pricePane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		supplierPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+		stockPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		IntPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.getContentPane().add(workPane, BorderLayout.CENTER);
 		this.setSize(350,250);
@@ -106,6 +119,7 @@ public class FrmRawManager_Add extends JDialog implements ActionListener {
 		else if(e.getSource()==this.btnOk){
 			
 			br=new BeanRaw();
+			rs=new BeanRawStock();
 			br.setRawName(edtName.getText());
 			br.setPrice(Double.parseDouble(edtPrice.getText()));
 			String ptName=this.cmbSupplier.getSelectedItem().toString();
@@ -119,6 +133,11 @@ public class FrmRawManager_Add extends JDialog implements ActionListener {
 			try {
 				RawManager rm = new RawManager();
 				rm.createRaw(br);
+				List<BeanRaw> l = rm.loadAllRaw();
+				rs.setRawID(l.get(l.size()-1).getRawID());
+				rs.setStockAddress(edtStock.getText());
+				rs.setStockQuantity(0);
+				new StockManager().createRawStock(rs);
 				this.setVisible(false);
 			} catch (BaseException e1) {
 				this.br=null;

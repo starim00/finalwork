@@ -81,7 +81,7 @@ public class ProductDetailDAO implements IProductDetailDAO {
 			
 			String sql = "SELECT * FROM productdetail";
 			if(productID!=0)
-				sql+=" WHERE¡¡productID = ?";
+				sql+=" WHERE productID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
 			if(productID!=0)
 				pst.setInt(1, productID);
@@ -130,6 +130,56 @@ public class ProductDetailDAO implements IProductDetailDAO {
 				conn.close();
 				return null;
 			}
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+	}
+
+	@Override
+	public List<BeanProductDetail> searchProductDetail(int rawID) throws BaseException {
+		// TODO Auto-generated method stub
+		ArrayList<BeanProductDetail> product = new ArrayList<BeanProductDetail>();
+		try {
+			Connection conn = DBUtil.getConnection();
+			
+			String sql = "SELECT * FROM productdetail";
+			if(rawID!=0)
+				sql+=" WHERE¡¡rawID = ?";
+			PreparedStatement pst = conn.prepareStatement(sql);
+			if(rawID!=0)
+				pst.setInt(1, rawID);
+			ResultSet rs = pst.executeQuery();
+			while(rs.next()){
+				BeanProductDetail p = new BeanProductDetail();
+				p.setProductID(rs.getInt(1));
+				p.setRawID(rs.getInt(2));
+				p.setQuantity(rs.getInt(3));
+				product.add(p);
+			}
+			rs.close();
+			pst.close();
+			conn.close();
+			return product;
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+	}
+
+	@Override
+	public void deleteByProductID(int productID) throws BaseException {
+		// TODO Auto-generated method stub
+		try {
+			Connection conn = DBUtil.getConnection();
+			String sql = "DELETE FROM productdetail WHERE productID = ?";
+			PreparedStatement pst = conn.prepareStatement(sql);
+			pst.setInt(1,productID);
+			pst.execute();
+			pst.close();
+			conn.close();
 		} catch (SQLException e) {
 			// TODO: handle exception
 			e.printStackTrace();
