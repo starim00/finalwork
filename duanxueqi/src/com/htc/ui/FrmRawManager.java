@@ -23,10 +23,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import com.htc.control.ProductManager;
 import com.htc.control.RawManager;
 import com.htc.control.SupplierManager;
-import com.htc.model.BeanProduct;
 import com.htc.model.BeanRaw;
 import com.htc.model.BeanSupplier;
 import com.htc.util.BaseException;
@@ -39,7 +37,7 @@ public class FrmRawManager extends JDialog implements ActionListener {
 	private Map<String, BeanSupplier> supMap_name = new HashMap<String, BeanSupplier>();
 	private JComboBox cmbSupplier = null;
 	private Button btnSearch = new Button("查询");
-	private Object tblTitle[] = { "产品ID", "产品名称", "价格", "供货商ID" };
+	private Object tblTitle[] = { "原材料ID", "原材料名称", "价格", "供货商ID" };
 	private Object tblData[][];
 	List<BeanRaw> br;
 	DefaultTableModel tablmod = new DefaultTableModel();
@@ -142,7 +140,7 @@ public class FrmRawManager extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == this.btnAdd) {
-			FrmRawManager_Add dlg = new FrmRawManager_Add(this, "添加供货商", true, supMap_name);
+			FrmRawManager_Add dlg = new FrmRawManager_Add(this, "添加原材料", true, supMap_name);
 			dlg.setVisible(true);
 			if (dlg.getRaw() != null) {// 刷新表格
 				this.reloadTable();
@@ -150,11 +148,11 @@ public class FrmRawManager extends JDialog implements ActionListener {
 		} else if (e.getSource() == this.btnModify) {
 			int i = this.dataTable.getSelectedRow();
 			if (i < 0) {
-				JOptionPane.showMessageDialog(null, "请选择供货商", "提示", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "请选择原材料", "提示", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			BeanRaw b = this.br.get(i);
-			FrmRawManager_Modify dlg = new FrmRawManager_Modify(this, "修改供货商", true, b);
+			FrmRawManager_Modify dlg = new FrmRawManager_Modify(this, "修改原材料", true, b,supMap_name);
 			dlg.setVisible(true);
 			if (dlg.getRaw() != null) {// 刷新表格
 				this.reloadTable();
@@ -162,11 +160,11 @@ public class FrmRawManager extends JDialog implements ActionListener {
 		} else if (e.getSource() == this.btnDelete) {
 			int i = this.dataTable.getSelectedRow();
 			if (i < 0) {
-				JOptionPane.showMessageDialog(null, "请选择供货商", "提示", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "请选择原材料", "提示", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			BeanRaw b = this.br.get(i);
-			FrmRawManager_Del dlg = new FrmRawManager_Del(this, "修改供货商", true, b);
+			FrmRawManager_Del dlg = new FrmRawManager_Del(this, "修改原材料", true, b);
 			dlg.setVisible(true);
 			if (dlg.getRaw() != null) {// 刷新表格
 				this.reloadTable();

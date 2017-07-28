@@ -34,7 +34,21 @@ public class ProduceDAO implements IProduceDAO {
 			throw new DbException(e);
 		}
 	}
-
+	public void deleteProduce(int productID) throws BaseException {
+		try {
+			Connection conn = DBUtil.getConnection();
+			String sql = "DELETE FROM produce WHERE productID = ?";
+			PreparedStatement pst = conn.prepareStatement(sql);
+			pst.setInt(1, productID);
+			pst.execute();
+			pst.close();
+			conn.close();
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+	}
 	@Override
 	public List<BeanProduce> loadAllProduce() throws BaseException {
 		// TODO Auto-generated method stub

@@ -19,9 +19,6 @@ public class RawManager {
 
 	public void deleteRaw(BeanRaw r, boolean d) throws BaseException {
 		int flag1 = 0, flag2 = 0;
-		if (new RawStockDAO().qryRawStock(r.getRawID()) != null) {
-			throw new BaseException("该原料还有库存");
-		}
 		if (!new ProductDetailDAO().searchProductDetail(r.getRawID()).isEmpty()) {
 			throw new BaseException("该原料有需求的产品");
 		}
@@ -44,8 +41,10 @@ public class RawManager {
 					new RawStorageDAO().deleteRawStorage(o.get(i).getRawStorageID());
 				}
 			}
+			new RawStockDAO().deleteRawStock(new RawStockDAO().qryRawStock(r.getRawID()).getRawStockID());
 			new RawDAO().deleteRaw(r.getRawID());
 		} else if (flag1 == 0 && flag2 == 0) {
+			new RawStockDAO().deleteRawStock(new RawStockDAO().qryRawStock(r.getRawID()).getRawStockID());
 			new RawDAO().deleteRaw(r.getRawID());
 		} else {
 			throw new BaseException("该原材料还有订单或出入库记录");

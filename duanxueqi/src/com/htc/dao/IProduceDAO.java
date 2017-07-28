@@ -15,4 +15,6 @@ public interface IProduceDAO {
 	public List<BeanProduce> loadByDate(long up, long down) throws BaseException;
 
 	public List<BeanProduce> loadByDate(int productID, long up, long down) throws BaseException;
+	
+	public void deleteProduce(int productID) throws BaseException;
 }

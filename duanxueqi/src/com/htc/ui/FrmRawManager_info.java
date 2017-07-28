@@ -17,6 +17,7 @@ import javax.swing.JTextArea;
 
 import com.htc.control.StockManager;
 import com.htc.model.BeanRaw;
+import com.htc.model.BeanRawStock;
 import com.htc.util.BaseException;
 
 public class FrmRawManager_info extends JDialog implements ActionListener {
@@ -28,18 +29,21 @@ public class FrmRawManager_info extends JDialog implements ActionListener {
 	private JLabel labelAddress = new JLabel(" 价   格:");
 	private JLabel labelContactPerson = new JLabel("供应商ID:");
 	private JLabel labelStock = new JLabel("库存");
+	private JLabel labelStockAddress = new JLabel("库存地址");
 	private JLabel labelInt = new JLabel("　　简介:");
 
 	private JLabel edtName = new JLabel();
 	private JLabel edtAddress = new JLabel();
 	private JLabel edtContact = new JLabel();
 	private JLabel edtStock = new JLabel();
+	private JLabel edtStockAddress = new JLabel();
 	private JTextArea edtInt = new JTextArea();
 
 	private JPanel namePane = new JPanel();
 	private JPanel AddressPane = new JPanel();
 	private JPanel ContactPane = new JPanel();
 	private JPanel StoPane = new JPanel();
+	private JPanel stad = new JPanel();
 	private JPanel IntPane = new JPanel();
 
 	public FrmRawManager_info(JDialog f, String s, boolean b,BeanRaw bs) {
@@ -54,7 +58,9 @@ public class FrmRawManager_info extends JDialog implements ActionListener {
 		edtInt.setEditable(false);
 		edtInt.setText(bs.getIntroduction());
 		try {
-			edtStock.setText(Integer.toString(new StockManager().searchRawStock(bs.getRawID()).getStockQuantity()));
+			BeanRawStock rs = new StockManager().searchRawStock(bs.getRawID());
+			edtStock.setText(Integer.toString(rs.getStockQuantity()));
+			edtStockAddress.setText(rs.getStockAddress());
 		} catch (BaseException e) {
 			// TODO Auto-generated catch block
 			JOptionPane.showMessageDialog(null, e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
@@ -69,6 +75,8 @@ public class FrmRawManager_info extends JDialog implements ActionListener {
 		StoPane.add(edtStock);
 		IntPane.add(labelInt);
 		IntPane.add(edtInt);
+		stad.add(labelStockAddress);
+		stad.add(edtStockAddress);
 		namePane.setSize(250, 100);
 		AddressPane.setSize(250, 100);
 		ContactPane.setSize(250, 100);
@@ -79,11 +87,13 @@ public class FrmRawManager_info extends JDialog implements ActionListener {
 		workPane.add(AddressPane);
 		workPane.add(ContactPane);
 		workPane.add(StoPane);
+		workPane.add(stad);
 		workPane.add(IntPane);
 		namePane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		AddressPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		ContactPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		StoPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+		stad.setAlignmentX(Component.LEFT_ALIGNMENT);
 		IntPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.getContentPane().add(workPane, BorderLayout.CENTER);
 		this.setSize(350, 300);

@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseWheelEvent;
 
 import javax.swing.BoxLayout;
 import javax.swing.JDialog;
@@ -17,6 +18,7 @@ import javax.swing.JTextArea;
 
 import com.htc.control.StockManager;
 import com.htc.model.BeanProduct;
+import com.htc.model.BeanProductStock;
 import com.htc.util.BaseException;
 
 public class FrmProductManager_info extends JDialog implements ActionListener {
@@ -28,18 +30,21 @@ public class FrmProductManager_info extends JDialog implements ActionListener {
 	private JLabel labelAddress = new JLabel(" 价   格:");
 	private JLabel labelContactPerson = new JLabel("产品类型");
 	private JLabel labelStock = new JLabel("库存");
+	private JLabel labelStockAddress = new JLabel("库存地址");
 	private JLabel labelInt = new JLabel("　　简介:");
 
 	private JLabel edtName = new JLabel();
 	private JLabel edtAddress = new JLabel();
 	private JLabel edtContact = new JLabel();
 	private JLabel edtStock = new JLabel();
+	private JLabel edtStockAddress = new JLabel();
 	private JTextArea edtInt = new JTextArea();
 
 	private JPanel namePane = new JPanel();
 	private JPanel AddressPane = new JPanel();
 	private JPanel ContactPane = new JPanel();
 	private JPanel StoPane = new JPanel();
+	private JPanel stad = new JPanel();
 	private JPanel IntPane = new JPanel();
 
 	public FrmProductManager_info(JDialog f, String s, boolean b,BeanProduct bs) {
@@ -54,7 +59,9 @@ public class FrmProductManager_info extends JDialog implements ActionListener {
 		edtInt.setEditable(false);
 		edtInt.setText(bs.getIntroduction());
 		try {
-			edtStock.setText(Integer.toString(new StockManager().searchProductStock(bs.getProductID()).getStockQuantity()));
+			BeanProductStock ps = new StockManager().searchProductStock(bs.getProductID());
+			edtStock.setText(Integer.toString(ps.getStockQuantity()));
+			edtStockAddress.setText(ps.getStockAddress());
 		} catch (BaseException e) {
 			// TODO Auto-generated catch block
 			JOptionPane.showMessageDialog(null, e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
@@ -67,6 +74,8 @@ public class FrmProductManager_info extends JDialog implements ActionListener {
 		ContactPane.add(edtContact);
 		StoPane.add(labelStock);
 		StoPane.add(edtStock);
+		stad.add(labelStockAddress);
+		stad.add(edtStockAddress);
 		IntPane.add(labelInt);
 		IntPane.add(edtInt);
 		namePane.setSize(250, 100);
@@ -79,11 +88,13 @@ public class FrmProductManager_info extends JDialog implements ActionListener {
 		workPane.add(AddressPane);
 		workPane.add(ContactPane);
 		workPane.add(StoPane);
+		workPane.add(stad);
 		workPane.add(IntPane);
 		namePane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		AddressPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		ContactPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		StoPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+		stad.setAlignmentX(Component.LEFT_ALIGNMENT);
 		IntPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.getContentPane().add(workPane, BorderLayout.CENTER);
 		this.setSize(350, 300);

@@ -122,7 +122,7 @@ public class FrmProductManager_Add extends JDialog implements ActionListener {
 				bp.setProductPrice(Double.parseDouble(edtPrice.getText()));
 			} catch (NumberFormatException e2) {
 				// TODO: handle exception
-				JOptionPane.showMessageDialog(null, "价格输入错误", "错误", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "请输入正确的价格", "错误", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			String ptName = this.cmbProducttype.getSelectedItem().toString();
@@ -132,6 +132,7 @@ public class FrmProductManager_Add extends JDialog implements ActionListener {
 				return;
 			}
 			bp.setProductTypeID(bpt.getProductTypeID());
+			bp.setIntroduction(edtInt.getText());
 			try {
 				ProductManager pm = new ProductManager();
 				pm.createProduct(bp);

@@ -48,7 +48,7 @@ public class FrmRawManager_Add extends JDialog implements ActionListener {
 	private JTextField edtStock = new JTextField(20);
 	private Map<String, BeanSupplier> supMap_name = null;
 	private JComboBox cmbSupplier = null;
-	private JTextArea edtInt = new JTextArea(3, 35);
+	private JTextArea edtInt = new JTextArea(5,15);
 
 	private JPanel namePane = new JPanel();
 	private JPanel pricePane = new JPanel();
@@ -100,7 +100,7 @@ public class FrmRawManager_Add extends JDialog implements ActionListener {
 		stockPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		IntPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.getContentPane().add(workPane, BorderLayout.CENTER);
-		this.setSize(350, 250);
+		this.setSize(350, 300);
 		// 屏幕居中显示
 		double width = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		double height = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
@@ -122,7 +122,14 @@ public class FrmRawManager_Add extends JDialog implements ActionListener {
 			br = new BeanRaw();
 			rs = new BeanRawStock();
 			br.setRawName(edtName.getText());
-			br.setPrice(Double.parseDouble(edtPrice.getText()));
+			try {
+				br.setPrice(Double.parseDouble(edtPrice.getText()));
+			} catch (NumberFormatException e2) {
+				// TODO: handle exception
+				JOptionPane.showMessageDialog(null, "请输入正确的价格", "错误", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			
 			String ptName = this.cmbSupplier.getSelectedItem().toString();
 			BeanSupplier bpt = this.supMap_name.get(ptName);
 			if (bpt == null) {
@@ -130,7 +137,6 @@ public class FrmRawManager_Add extends JDialog implements ActionListener {
 				return;
 			}
 			br.setSupplier(bpt.getSupplierID());
-			;
 			br.setIntroduction(edtInt.getText());
 			try {
 				RawManager rm = new RawManager();

@@ -145,7 +145,7 @@ public class ProductDetailDAO implements IProductDetailDAO {
 
 			String sql = "SELECT * FROM productdetail";
 			if (rawID != 0)
-				sql += " WHERE¡¡rawID = ?";
+				sql += " WHERE rawID = ?";
 			PreparedStatement pst = conn.prepareStatement(sql);
 			if (rawID != 0)
 				pst.setInt(1, rawID);

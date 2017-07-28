@@ -2,6 +2,7 @@ package com.htc.control;
 
 import java.util.List;
 
+import com.htc.dao.ProduceDAO;
 import com.htc.dao.ProductDAO;
 import com.htc.dao.ProductDetailDAO;
 import com.htc.dao.ProductOrderDAO;
@@ -9,6 +10,7 @@ import com.htc.dao.ProductStockDAO;
 import com.htc.dao.ProductStorageDAO;
 import com.htc.model.BeanProduct;
 import com.htc.model.BeanProductOrder;
+import com.htc.model.BeanProductStock;
 import com.htc.model.BeanProductStorage;
 import com.htc.util.BaseException;
 
@@ -19,8 +21,6 @@ public class ProductManager {
 
 	public void deleteProduct(BeanProduct p, boolean d) throws BaseException {
 		int flag1 = 0, flag2 = 0;
-		if (new ProductStockDAO().qryProductStock(p.getProductID()) != null)
-			throw new BaseException("该产品还有库存");
 		if (!new ProductOrderDAO().qryProductOrder(p.getProductID()).isEmpty()) {
 			flag1 = 1;
 		}
@@ -40,9 +40,16 @@ public class ProductManager {
 					new ProductStorageDAO().deleteProductStorage(o.get(i).getProductStorageID());
 				}
 			}
+			new ProductDetailDAO().deleteByProductID(p.getProductID());
+			BeanProductStock ps = new ProductStockDAO().qryProductStock(p.getProductID());
+			new ProductStockDAO().deleteProductStock(ps.getProductStockID());
+			new ProduceDAO().deleteProduce(p.getProductID());
 			new ProductDAO().deleteProduct(p.getProductID());
 		} else if (flag1 == 0 && flag2 == 0) {
 			new ProductDetailDAO().deleteByProductID(p.getProductID());
+			BeanProductStock ps = new ProductStockDAO().qryProductStock(p.getProductID());
+			new ProductStockDAO().deleteProductStock(ps.getProductStockID());
+			new ProduceDAO().deleteProduce(p.getProductID());
 			new ProductDAO().deleteProduct(p.getProductID());
 		} else {
 			throw new BaseException("该产品还有订单和出入库记录");

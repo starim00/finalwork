@@ -124,7 +124,7 @@ public class FrmProductManager_Modify extends JDialog implements ActionListener 
 				return;
 			}
 			bp.setProductTypeID(bpt.getProductTypeID());
-			;
+			bp.setIntroduction(edtInt.getText());;
 			try {
 				ProductManager pm = new ProductManager();
 				pm.modifyProduct(bp);

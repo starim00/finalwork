@@ -4,10 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Component;
 import java.awt.FlowLayout;
-import java.awt.TextArea;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.BoxLayout;
 import javax.swing.JDialog;
@@ -109,6 +110,14 @@ public class FrmSupplierManager_Modify extends JDialog implements ActionListener
 			sup.setSupplierName(edtName.getText());
 			sup.setSupplierAddress(edtAddress.getText());
 			sup.setContactPerson(edtContact.getText());
+			Pattern pamo = Pattern.compile("\\d{11}");
+			Pattern pa = Pattern.compile("\\d{8}");
+			Matcher mamo = pamo.matcher(edtTelephone.getText());
+			Matcher ma = pa.matcher(edtTelephone.getText());
+			if((!ma.find())&&(!mamo.find())){
+				JOptionPane.showMessageDialog(null,"请输入正确的电话号码", "错误", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 			sup.setTelephone(Long.parseLong(edtTelephone.getText()));
 			sup.setIntroduction(edtInt.getText());
 			try {

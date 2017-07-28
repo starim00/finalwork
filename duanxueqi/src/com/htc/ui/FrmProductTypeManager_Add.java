@@ -32,7 +32,7 @@ public class FrmProductTypeManager_Add extends JDialog implements ActionListener
 	private JLabel labelInt = new JLabel("¡¡¼ò½é:");
 
 	private JTextField edtName = new JTextField(20);
-	private JTextArea edtInt = new JTextArea(3, 35);
+	private JTextArea edtInt = new JTextArea(5,15);
 
 	private JPanel namePane = new JPanel();
 	private JPanel IntPane = new JPanel();
